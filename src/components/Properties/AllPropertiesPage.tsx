@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Filter, Grid, List } from 'lucide-react';
 import PropertyFilterSidebar from './PropertyFilterSidebar';
@@ -12,6 +11,9 @@ interface LocalSearchFilters {
   location: string;
   amenities: string[];
   availableFrom?: string;
+  gender?: string;
+  minPrice?: string;
+  maxPrice?: string;
 }
 
 interface AllPropertiesPageProps {
