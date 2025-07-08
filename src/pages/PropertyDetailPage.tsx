@@ -1,235 +1,161 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Assuming react-router is used for routing and getting ID
-import PropertyHeader from '../components/PropertyDetailPageComponents/PropertyHeader';
-import ImageGallery from '../components/PropertyDetailPageComponents/ImageGallery';
-import PropertyDetails from '../components/PropertyDetailPageComponents/PropertyDetails';
-import LocationMap from '../components/PropertyDetailPageComponents/LocationMap';
-import ReviewsSection from '../components/PropertyDetailPageComponents/ReviewsSection';
+
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ArrowLeft, MapPin, Heart, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import PricingCard from '../components/PropertyDetailPageComponents/PricingCard';
-import OwnerDetails from '../components/PropertyDetailPageComponents/OwnerDetails';
-import QuickActions from '../components/PropertyDetailPageComponents/QuickActions';
-import ContactModal from '../components/PropertyDetailPageComponents/ContactModal';
-import { Property } from '../types'; // Import the updated Property interface
+import { Property } from '../types';
 
 const PropertyDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get property ID from URL params
-  const [property, setProperty] = useState<Property | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showContactModal, setShowContactModal] = useState(false);
+  const { id } = useParams<{ id: string }>();
   const [isFavorited, setIsFavorited] = useState(false);
-  const [showAllAmenities, setShowAllAmenities] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Fetch property data from API
-    const fetchProperty = async () => {
-      try {
-        setLoading(true);
-        // Replace with your actual API call endpoint
-        // The endpoint is likely something like /api/posts/get-post-by-id/:id
-        const response = await fetch(`/api/posts/get-post-by-id/${id}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: Property = await response.json();
-        setProperty(data);
-      } catch (err) {
-        console.error('Error fetching property data:', err);
-        setError('Failed to load property data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchProperty();
-    }
-
-  }, [id]); // Refetch when ID changes
-
-  const nextImage = () => {
-    if (property?.images?.length) {
-      setCurrentImageIndex((prev) =>
-        prev === property.images.length - 1 ? 0 : prev + 1
-      );
-    }
+  // Mock property data
+  const property: Property = {
+    id: id || '1',
+    title: 'Modern PG in Koramangala',
+    price: 12000,
+    location: 'Koramangala, Bangalore',
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 450,
+    description: 'A modern and well-maintained PG in the heart of Koramangala, perfect for students and young professionals.',
+    amenities: ['WiFi', 'AC', 'Attached Bathroom', 'Food Service', 'Laundry', 'Security'],
+    images: [
+      'https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg',
+      'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg',
+      'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg'
+    ],
+    verified: true,
+    featured: true,
+    submittedBy: 'Rajesh Kumar',
+    submittedDate: '2024-01-15',
+    views: 2345,
+    contacted: 456,
+    status: 'active'
   };
 
-  const prevImage = () => {
-     if (property?.images?.length) {
-      setCurrentImageIndex((prev) =>
-        prev === 0 ? property.images.length - 1 : prev - 1
-      );
-    }
-  };
-
-  const handleFavoriteClick = () => {
-    setIsFavorited(!isFavorited);
-    // TODO: Implement API call to update favorite status
-  };
-
-  const handleShareClick = () => {
-    // TODO: Implement share functionality
-    console.log('Share clicked');
+  const handleBackClick = () => {
+    window.history.back();
   };
 
   const handleGetContactDetailsClick = () => {
-    setShowContactModal(true);
+    console.log('Get contact details clicked');
+    alert('Contact details: +91 9876543210');
   };
-
-  const handleScheduleVisitClick = () => {
-    // TODO: Implement schedule visit logic
-    console.log('Schedule Visit clicked');
-  };
-
-  const handleChatWithOwnerClick = () => {
-    // TODO: Implement chat functionality
-    console.log('Chat with owner clicked');
-  };
-
-  const handleBookSiteVisitClick = () => {
-    // TODO: Implement book site visit functionality
-    console.log('Book Site Visit clicked');
-  };
-
-  // Assuming share property from Quick Actions does the same as header share
-  const handleSharePropertyClick = () => {
-     handleShareClick();
-  };
-
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="flex justify-center items-center min-h-screen text-red-600">{error}</div>;
-  }
-
-  if (!property) {
-    return <div className="flex justify-center items-center min-h-screen">Property not found.</div>;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Property Images */}
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="relative">
-              <img
-                src={property.images?.[0] || property.image}
-                alt={property.title}
-                className="w-full h-96 object-cover rounded-lg"
-              />
+      {/* Header */}
+      <div className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <button 
+              onClick={handleBackClick}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span>Back to Properties</span>
+            </button>
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={() => setIsFavorited(!isFavorited)}
+                className={`p-2 rounded-full transition-colors ${
+                  isFavorited 
+                    ? 'bg-red-100 text-red-600' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
+              </button>
+              <button className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                <Share2 className="h-5 w-5" />
+              </button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {property.images?.slice(1, 5).map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Property ${index + 2}`}
-                  className="w-full h-44 object-cover rounded-lg"
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Image Gallery */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="relative h-96">
+                <img 
+                  src={property.images?.[0] || 'https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg'}
+                  alt={property.title}
+                  className="w-full h-full object-cover"
                 />
-              ))}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                  1 / {property.images?.length || 1}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Header */}
-          <PropertyHeader
-            title={property.title}
-            location={property.location}
-            isFavorited={isFavorited}
-            onBackClick={() => window.history.back()} // Example back navigation
-            onFavoriteClick={handleFavoriteClick}
-            onShareClick={handleShareClick}
-          />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
-                {/* Image Gallery */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                  <div className="lg:col-span-2">
-                    <img
-                      src={property?.images?.[0] || '/placeholder-image.jpg'}
-                      alt="Property main"
-                      className="w-full h-96 object-cover rounded-lg"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                    {property?.images?.slice(1, 3).map((image, index) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Property ${index + 2}`}
-                        className="w-full h-44 lg:h-44 object-cover rounded-lg"
-                      />
-                    ))}
+            {/* Property Info */}
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
+                  <div className="flex items-center text-gray-600 mb-4">
+                    <MapPin className="h-5 w-5 mr-2" />
+                    <span>{property.location}</span>
                   </div>
                 </div>
-
-                {/* Property Details */}
-                <PropertyDetails
-                    property={property}
-                    showAllAmenities={showAllAmenities}
-                    setShowAllAmenities={setShowAllAmenities}
-                 />
-
-                {/* Location Map */}
-                {property.location_details && (
-                    <LocationMap
-                        address={property.location_details.address}
-                        coordinates={property.location_details.coordinates}
-                    />
-                )}
-
-                {/* Reviews */}
-                {property.reviews && (
-                  <ReviewsSection
-                    reviews={property.reviews}
-                  />
-                )}
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-blue-600">
+                    ₹{property.price.toLocaleString()}
+                  </div>
+                  <div className="text-gray-600">per month</div>
+                </div>
               </div>
 
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-24 space-y-6">
-                  {/* Pricing Card */}
-                   <PricingCard
-                      price={property.totalRent}
-                      currency="INR"
-                      rentIncludes={['Electricity', 'Water', 'Maintenance']}
-                  />
+              <div className="grid grid-cols-3 gap-6 mb-8 p-4 bg-gray-50 rounded-xl">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
+                  <div className="text-gray-600">Bedrooms</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
+                  <div className="text-gray-600">Bathrooms</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{property.area}</div>
+                  <div className="text-gray-600">sq ft</div>
+                </div>
+              </div>
 
-                  {/* Owner Details */}
-                  {property.owner && (
-                    <OwnerDetails
-                      owner={property.owner}
-                      onRevealContactInfoClick={handleGetContactDetailsClick} // Uses the same modal trigger
-                    />
-                  )}
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Description</h2>
+                <p className="text-gray-600 leading-relaxed">{property.description}</p>
+              </div>
 
-                  {/* Quick Actions */}
-                   <QuickActions
-                    onChatWithOwnerClick={handleChatWithOwnerClick}
-                    onBookSiteVisitClick={handleBookSiteVisitClick}
-                    onSharePropertyClick={handleSharePropertyClick}
-                  />
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Amenities</h2>
+                <div className="flex flex-wrap gap-3">
+                  {property.amenities.map((amenity, index) => (
+                    <span 
+                      key={index}
+                      className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                    >
+                      {amenity}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Contact Modal */}
-          {showContactModal && property?.owner && (
-            <ContactModal
-              show={showContactModal}
-              onClose={() => setShowContactModal(false)}
-              owner={property.owner}
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <PricingCard 
+              price={property.price}
+              currency="INR"
+              rentIncludes={property.amenities}
             />
-          )}
+          </div>
         </div>
       </div>
     </div>

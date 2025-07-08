@@ -1,15 +1,5 @@
 import React from 'react';
-import { X, Filter } from 'lucide-react';
-
-interface SearchFilters {
-  location: string;
-  propertyType: string;
-  minPrice: number;
-  maxPrice: number;
-  bedrooms: string;
-  gender: string;
-  amenities: string[];
-}
+import { SearchFilters } from '../../types';
 
 interface PropertyFilterSidebarProps {
   showFilters: boolean;
@@ -37,135 +27,115 @@ const PropertyFilterSidebar: React.FC<PropertyFilterSidebarProps> = ({
   if (!showFilters) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 lg:mb-0">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-          <Filter className="h-5 w-5 mr-2" />
-          Filters
-        </h3>
-        <button
-          onClick={clearFilters}
-          className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+    <div className="bg-white rounded-lg shadow-md p-6 w-full md:w-80 space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 mb-3">Filter Properties</h3>
+
+      {/* Property Type */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Property Type</label>
+        <select
+          value={filters.propertyType || ''}
+          onChange={(e) => handleFilterChange('propertyType', e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
         >
-          Clear All
-        </button>
+          <option value="">All Types</option>
+          {propertyTypes.map((type) => (
+            <option key={type} value={type}>{type}</option>
+          ))}
+        </select>
       </div>
 
-      <div className="space-y-6">
-        {/* Location Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Location
-          </label>
+      {/* Location */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Location</label>
+        <input
+          type="text"
+          value={filters.location || ''}
+          onChange={(e) => handleFilterChange('location', e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          placeholder="Enter location"
+        />
+      </div>
+
+      {/* Gender Preference */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Gender Preference</label>
+        <select
+          value={filters.gender || ''}
+          onChange={(e) => handleFilterChange('gender', e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        >
+          <option value="">Any</option>
+          {genderOptions.map((gender) => (
+            <option key={gender} value={gender}>{gender}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Bedrooms */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Bedrooms</label>
+        <select
+          value={filters.bedrooms || ''}
+          onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        >
+          <option value="">Any</option>
+          {bedroomOptions.map((bedroom) => (
+            <option key={bedroom} value={bedroom}>{bedroom}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Amenities */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Amenities</label>
+        <div className="space-y-2">
+          {amenityOptions.map((amenity) => (
+            <div key={amenity} className="flex items-center">
+              <input
+                id={`amenity-${amenity}`}
+                type="checkbox"
+                checked={filters.amenities?.includes(amenity) || false}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              />
+              <label htmlFor={`amenity-${amenity}`} className="ml-2 text-sm text-gray-700">
+                {amenity}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Price Range */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Price Range</label>
+        <div className="flex space-x-2">
           <input
-            type="text"
-            value={filters.location}
-            onChange={(e) => handleFilterChange('location', e.target.value)}
-            placeholder="Enter city or area"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            type="number"
+            value={filters.minPrice || ''}
+            onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+            className="mt-1 block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            placeholder="Min"
+          />
+          <input
+            type="number"
+            value={filters.maxPrice || ''}
+            onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+            className="mt-1 block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            placeholder="Max"
           />
         </div>
-
-        {/* Property Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Property Type
-          </label>
-          <select
-            value={filters.propertyType}
-            onChange={(e) => handleFilterChange('propertyType', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">All Types</option>
-            {propertyTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Price Range Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Price Range (₹/month)
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="number"
-              value={filters.minPrice || ''}
-              onChange={(e) => handleFilterChange('minPrice', parseInt(e.target.value) || 0)}
-              placeholder="Min"
-              className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <input
-              type="number"
-              value={filters.maxPrice || ''}
-              onChange={(e) => handleFilterChange('maxPrice', parseInt(e.target.value) || 0)}
-              placeholder="Max"
-              className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        {/* Bedrooms Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Bedrooms
-          </label>
-          <select
-            value={filters.bedrooms}
-            onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Any</option>
-            {bedroomOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Gender Preference Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Gender Preference
-          </label>
-          <select
-            value={filters.gender}
-            onChange={(e) => handleFilterChange('gender', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Any</option>
-            {genderOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Amenities Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Amenities
-          </label>
-          <div className="space-y-2 max-h-48 overflow-y-auto">
-            {amenityOptions.map((amenity) => (
-              <label key={amenity} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={filters.amenities.includes(amenity)}
-                  onChange={() => handleAmenityToggle(amenity)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700">{amenity}</span>
-              </label>
-            ))}
-          </div>
-        </div>
       </div>
+
+      {/* Clear Filters */}
+      <button
+        onClick={clearFilters}
+        className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Clear Filters
+      </button>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Eye, 
   EyeOff, 
@@ -7,9 +7,6 @@ import {
   User
 } from 'lucide-react';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useToast } from "@/components/ui/use-toast"
 import { ApiEndpoints } from '../../types';
 
 const SignUpForm: React.FC = () => {
@@ -18,8 +15,6 @@ const SignUpForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { toast } = useToast()
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -30,7 +25,7 @@ const SignUpForm: React.FC = () => {
     setLoading(true);
 
     try {
-      const apiEndpoints: ApiEndpoints = { // Assuming ApiEndpoints is defined as a const object
+      const apiEndpoints: ApiEndpoints = {
         auth: { register: '/api/auth/register', login: '/api/auth/login', verifyEmail: '/api/auth/verify-email', forgotPassword: '/api/auth/forgot-password', resetPassword: '/api/auth/reset-password', googleRequest: '/api/auth/google-request', google: '/api/auth/google' },
         posts: { addPost: '/api/posts/addpost', getPosts: '/api/posts/getpost', getPostById: '/api/posts/get-post-by-id/:id', getPopularPosts: '/api/posts/get-popular-posts', getPostByUser: '/api/posts/get-post-by-user/:userId', getPostByLocation: '/api/posts/get-post-by-location/:city', activatePost: '/api/posts/activate-post/:postid', deletePost: '/api/posts/delete-post/:postid', subscription: '/api/posts/subscription/:postid', uniqueCities: '/api/posts/unique-cities', addMedia: '/api/posts/add-media/:postid', editPost: '/api/posts/edit-post/:postId' },
         user: { getUserById: '/api/user/get-user-by-id/:id', getUser: '/api/user/', changePassword: '/api/user/change-password', checkUsername: '/api/user/check-username' },
@@ -39,7 +34,8 @@ const SignUpForm: React.FC = () => {
         coupon: { getAllCoupons: '/api/coupon/get-all-coupons', generateCoupon: '/api/coupon/generate-coupon', deleteCoupon: '/api/coupon/delete-coupon/:couponId', toggleCouponStatus: '/api/coupon/toggle-coupon-status/:couponId', verifyCoupon: '/api/coupon/verify-coupon' },
         membership: { getMemberships: '/api/membership/' },
         admin: { getStats: '/api/admin/get-stats', getAllUsers: '/api/admin/get-all-user', getAllMembershipUsers: '/api/admin/get-all-membership-users', getAllMemberships: '/api/admin/get-all-memberships', deleteUser: '/api/admin/delete-user-by-id/:userId', updatePost: '/api/admin/update-post/:postId', updateUser: '/api/admin/update-user-by-id/:id', getAllPosts: '/api/admin/get-all-posts', getPostByUserId: '/api/admin/get-post-by-user-id/:userId', deletePost: '/api/admin/delete-post-by-id/:postId', getAllPendingPosts: '/api/admin/get-all-pending-posts', updateMemberships: '/api/admin/update-memberships/:membershipId', getAllContacts: '/api/admin/get-all-contacts', getAllOrders: '/api/admin/get-all-orders', getAllAdmins: '/api/admin/get-all-admins', removeAdminRole: '/api/admin/remove-admin-role', recentAdminActivities: '/api/admin/recent-admin-activities' }
-     };
+      };
+      
       const response = await fetch(apiEndpoints.auth.register, {
         method: 'POST',
         headers: {
@@ -51,29 +47,15 @@ const SignUpForm: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Registration successful
         console.log('Registration successful');
-        toast({
-          title: "Registration Successful",
-          description: "Please check your email to verify your account.",
-        })
-        router.push('/verify-email');
+        alert('Registration successful! Please check your email to verify your account.');
       } else {
-        // Registration failed
         console.error('Registration failed:', data.message);
-        toast({
-          variant: "destructive",
-          title: "Registration Failed",
-          description: data.message,
-        })
+        alert('Registration failed: ' + data.message);
       }
     } catch (error: any) {
       console.error('An error occurred during registration:', error);
-      toast({
-        variant: "destructive",
-        title: "Registration Failed",
-        description: error.message,
-      })
+      alert('Registration failed: ' + error.message);
     } finally {
       setLoading(false);
     }

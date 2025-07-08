@@ -1,21 +1,25 @@
+
 import React, { useState } from 'react';
-import { X, User } from 'lucide-react';
-import SignInForm from '../components/Auth/SignInForm';
-import SignUpForm from '../components/Auth/SignUpForm';
-import ForgotPasswordForm from '../components/Auth/ForgotPasswordForm';
-import SocialAuthButtons from '../components/Auth/SocialAuthButtons';
-import { signIn, signUp, forgotPassword, sendOtp, socialAuth } from '../api/authApi'; // Import API functions
+import { X, Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: 'signin' | 'signup' | 'forgot';
-  onModeChange: (mode: 'signin' | 'signup' | 'forgot') => void;
+  mode: 'signin' | 'signup';
+  onModeChange: (mode: 'signin' | 'signup') => void;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  otp: string;
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onModeChange }) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
@@ -23,134 +27,213 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onModeChan
     confirmPassword: '',
     otp: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      let response;
-      if (mode === 'signin') {
-        response = await signIn({
-          email: authMethod === 'email' ? formData.email : undefined,
-          phone: authMethod === 'phone' ? formData.phone : undefined,
-          password: authMethod === 'email' ? formData.password : undefined,
-          otp: authMethod === 'phone' ? formData.otp : undefined,
-        });
-      } else if (mode === 'signup') {
-        response = await signUp(formData);
-      } else if (mode === 'forgot') {
-        response = await forgotPassword({ email: formData.email });
-      }
-
-      console.log(`${mode} successful:`, response);
-      // TODO: Handle successful authentication (e.g., store token, redirect, show success message)
-      onClose(); // Close modal on success for now
-
-    } catch (error: any) {
-      console.error(`${mode} failed:`, error);
-      // TODO: Handle authentication errors (e.g., display error message to user)
-      alert(`Authentication failed: ${error.message}`); // Basic error display
-    } finally {
-      setIsLoading(false);
-    }
+    setLoading(true);
+    // Handle form submission
+    console.log('Form submitted:', formData);
+    setLoading(false);
   };
 
-  const handleSocialAuth = (provider: 'google' | 'facebook' | 'linkedin' | 'twitter') => {
-    // Call the imported socialAuth API function
-    socialAuth(provider);
-    // TODO: Handle potential errors or callbacks from social auth initiation if necessary
-  };
-
-  const handleSendOtp = async () => {
-    setIsLoading(true);
-    try {
-      // Call the imported sendOtp API function
-      const response = await sendOtp({ phone: formData.phone });
-      console.log('Send OTP successful:', response);
-      setIsOtpSent(true);
-      // TODO: Show a success message to the user
-    } catch (error: any) {
-      console.error('Send OTP failed:', error);
-      // TODO: Handle error (e.g., display error message)
-      alert(`Failed to send OTP: ${error.message}`); // Basic error display
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSendOtp = () => {
+    setIsOtpSent(true);
+    console.log('OTP sent to:', formData.phone);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-3xl max-w-5xl w-full shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <User className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">HomeDaze</span>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Student Rentals</div>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-          >
-            <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-          </button>
+        <div className="text-center pt-8 pb-6 px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
+          </h2>
+          <p className="text-gray-600">
+            {mode === 'signin' 
+              ? 'Sign in to your account to continue' 
+              : 'Join us to find your perfect home'
+            }
+          </p>
         </div>
 
-        {/* Content */}
-        <div className="overflow-hidden">
-          {mode === 'signin' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
-              <SignInForm
-                formData={formData}
-                setFormData={setFormData}
-                handleSubmit={handleSubmit}
-                isLoading={isLoading}
-                onModeChange={onModeChange}
-                authMethod={authMethod}
-                setAuthMethod={setAuthMethod}
-                isOtpSent={isOtpSent}
-                setIsOtpSent={setIsOtpSent}
-                handleSendOtp={handleSendOtp}
-                showPassword={showPassword}
-                setShowPassword={setShowPassword}
-              />
-              <SocialAuthButtons handleSocialAuth={handleSocialAuth} mode="signin" />
-            </div>
-          )}
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-4">
           {mode === 'signup' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[700px]">
-               <SignUpForm
-                formData={formData}
-                setFormData={setFormData}
-                handleSubmit={handleSubmit}
-                isLoading={isLoading}
-                onModeChange={onModeChange}
-                showPassword={showPassword}
-                setShowPassword={setShowPassword}
-              />
-              <SocialAuthButtons handleSocialAuth={handleSocialAuth} mode="signup" />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
             </div>
           )}
-          {mode === 'forgot' && (
-            <ForgotPasswordForm
-              formData={formData}
-              setFormData={setFormData}
-              handleSubmit={handleSubmit}
-              isLoading={isLoading}
-              onModeChange={onModeChange}
-            />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+          </div>
+
+          {mode === 'signup' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <div className="flex space-x-2">
+                <div className="relative flex-1">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter phone number"
+                    required
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  {isOtpSent ? 'Resend' : 'Send OTP'}
+                </button>
+              </div>
+            </div>
           )}
-        </div>
+
+          {mode === 'signup' && isOtpSent && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                OTP
+              </label>
+              <input
+                type="text"
+                value={formData.otp}
+                onChange={(e) => handleInputChange('otp', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter OTP"
+                maxLength={6}
+                required
+              />
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password}
+                onChange={(e) => handleInputChange('password', e.target.value)}
+                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
+
+          {mode === 'signup' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Confirm your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading 
+              ? 'Processing...' 
+              : mode === 'signin' 
+                ? 'Sign In' 
+                : 'Create Account'
+            }
+          </button>
+
+          <div className="text-center pt-4">
+            <p className="text-gray-600">
+              {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
+              <button
+                type="button"
+                onClick={() => onModeChange(mode === 'signin' ? 'signup' : 'signin')}
+                className="text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+              >
+                {mode === 'signin' ? 'Sign Up' : 'Sign In'}
+              </button>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );

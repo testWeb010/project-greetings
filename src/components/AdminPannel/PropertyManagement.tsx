@@ -7,9 +7,7 @@ import {
   Edit, 
   CheckCircle,
   AlertTriangle,
-  Clock,
-  TrendingUp,
-  MapPin
+  Clock
 } from 'lucide-react';
 
 interface AdminUser {
@@ -46,12 +44,10 @@ interface PropertyManagementProps {
   currentAdmin: AdminUser;
 }
 
-const PropertyManagement: React.FC<PropertyManagementProps> = ({ currentAdmin }) => {
+const PropertyManagement: React.FC<PropertyManagementProps> = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
-  const [showPropertyModal, setShowPropertyModal] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
   const properties: Property[] = [
     {
@@ -358,8 +354,6 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({ currentAdmin })
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => {
-                            setSelectedProperty(property);
-                            setShowPropertyModal(true);
                           }}
                           className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                         >

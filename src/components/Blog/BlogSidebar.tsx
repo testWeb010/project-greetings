@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, Tag, Calendar } from 'lucide-react';
+import { Search, Calendar } from 'lucide-react';
 
 interface BlogSidebarProps {
   categories: { key: string; label: string; count: number }[];

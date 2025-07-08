@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  Filter, 
   Download,
   Shield,
   Ban,
@@ -9,7 +8,8 @@ import {
   Edit,
   Trash2,
   Plus,
-  Settings
+  Settings,
+  User
 } from 'lucide-react';
 
 interface AdminUser {
@@ -179,7 +179,7 @@ const ActivityLogs: React.FC<ActivityLogsProps> = () => {
   };
 
   const getActivityIcon = (type: string) => {
-    const icons = {
+    const icons: { [key: string]: React.ComponentType<any> } = {
       'user.ban': Ban,
       'user.verify': UserCheck,
       'user.edit': Edit,
@@ -191,7 +191,7 @@ const ActivityLogs: React.FC<ActivityLogsProps> = () => {
       'admin.settings': Settings,
       'admin.login': Settings
     };
-    return icons[type as keyof typeof icons] || Edit;
+    return icons[type] || Edit;
   };
 
   const filteredActivities = activities.filter(activity => {
@@ -361,7 +361,7 @@ const ActivityLogs: React.FC<ActivityLogsProps> = () => {
                       <div className="text-sm text-gray-900 dark:text-white">
                         {Object.entries(activity.details).map(([key, value]) => (
                           <p key={key}>
-                            {key}: {value}
+                            {key}: {String(value)}
                           </p>
                         ))}
                       </div>

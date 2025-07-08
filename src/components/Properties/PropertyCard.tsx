@@ -1,27 +1,28 @@
 import React from 'react';
-import { Heart, MessageSquare, Bed, Bath, MapPin, Star } from 'lucide-react';
+import { MapPin, Heart, MessageCircle, Phone, Star } from 'lucide-react';
 import { Property } from '../../types';
 
 interface PropertyCardProps {
   property: Property;
-  onFavorite?: (id: string) => void;
-  onChat?: (id: string) => void;
-  formatPrice?: (price: number) => string;
-  renderStars?: (rating: number) => React.ReactNode;
+  onClick?: () => void;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  const amenities = [
-    { icon: '🏠', name: 'Electricity', available: property.electricityIncluded },
-    { icon: '🍽️', name: 'Kitchen', available: property.kitchenAvailable },
-    { icon: '🚿', name: 'Washroom', available: property.washroomAvailable },
-    { icon: '❄️', name: 'AC', available: property.ac },
-    { icon: '💧', name: 'RO Water', available: property.roWater },
-    { icon: '🍽️', name: 'Food Service', available: property.foodServiceAvailable }
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
+  const amenityIcons = [
+    { icon: '⚡', name: 'Electricity', available: true },
+    { icon: '🍳', name: 'Kitchen', available: true },
+    { icon: '🚿', name: 'Washroom', available: true },
+    { icon: '❄️', name: 'AC', available: true },
+    { icon: '💧', name: 'RO Water', available: true },
+    { icon: '🍽️', name: 'Food Service', available: true },
   ];
 
   const formatPrice = (price: number) => {
-    return `₹${price.toLocaleString('en-IN')}`;
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
   const renderStars = (rating: number) => {
@@ -43,64 +44,59 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    
+    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onClick={onClick}>
+      
+      
       <img
         src={property.image}
         alt={property.title}
-        className="w-full h-56 object-cover"
+        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
       />
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold text-gray-900">{property.title}</h3>
-          <div className="flex items-center space-x-2">
-            <button className="text-gray-600 hover:text-blue-600 transition-colors duration-200">
-              <Heart className="h-5 w-5" />
-            </button>
-            <button className="text-gray-600 hover:text-blue-600 transition-colors duration-200">
-              <MessageSquare className="h-5 w-5" />
-            </button>
+      
+
+      
+      <div className="p-6">
+        
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <span className="text-2xl font-bold text-gray-900">
+              {formatPrice(property.price)}
+            </span>
+            <span className="text-gray-600 text-sm">/month</span>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 text-gray-600 mb-3">
-          <MapPin className="h-4 w-4" />
+        
+        <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          {property.title}
+        </h3>
+
+        
+        <div className="flex items-center text-gray-600 mb-4">
+          <MapPin className="h-4 w-4 mr-2 text-blue-500" />
           <span className="text-sm">{property.location}</span>
         </div>
 
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <span className="text-xl font-bold text-blue-600">{formatPrice(property.price)}</span>
-            <span className="text-gray-600">/month</span>
-          </div>
-          {renderStars(4.5)}
+        
+        <div className="flex flex-wrap gap-1 mb-4">
+          {amenityIcons.slice(0, 4).map((amenity) => (
+            <span
+              key={amenity.name}
+              className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium flex items-center space-x-1"
+            >
+              <span>{amenity.icon}</span>
+              <span>{amenity.name}</span>
+            </span>
+          ))}
+          {amenityIcons.length > 4 && (
+            <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+              +{amenityIcons.length - 4} more
+            </span>
+          )}
         </div>
 
-        <div className="flex items-center space-x-4 mb-4">
-          <div className="flex items-center space-x-1 text-gray-600">
-            <Bed className="h-4 w-4" />
-            <span className="text-sm">{property.bedrooms} Beds</span>
-          </div>
-          <div className="flex items-center space-x-1 text-gray-600">
-            <Bath className="h-4 w-4" />
-            <span className="text-sm">{property.bathrooms} Baths</span>
-          </div>
-        </div>
-      
-      <div className="flex flex-wrap gap-2 mb-4">
-        {amenities.slice(0, 3).map((amenity, index) => (
-          <div
-            key={index}
-            className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
-              amenity.available
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-100 text-gray-500'
-            }`}
-          >
-            <span>{amenity.icon}</span>
-            <span>{amenity.name}</span>
-          </div>
-        ))}
-      </div>
+        
       </div>
     </div>
   );

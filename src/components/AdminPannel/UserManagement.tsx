@@ -42,11 +42,11 @@ interface UserManagementProps {
   currentAdmin: AdminUser;
 }
 
-const UserManagement: React.FC<UserManagementProps> = ({ currentAdmin }) => {
+const UserManagement: React.FC<UserManagementProps> = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [showPropertyModal, setShowPropertyModal] = useState<boolean>(false);
+  const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
   const users: UserProfile[] = [
