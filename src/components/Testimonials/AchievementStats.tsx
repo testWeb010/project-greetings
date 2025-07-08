@@ -1,5 +1,4 @@
 import React from 'react';
-import { Users, Building, MapPin, Star } from 'lucide-react';
 
 interface Achievement {
   number: string;

@@ -13,13 +13,11 @@ import { PropertyFormData, PropertyFormErrors } from '../../types';
 
 interface AmenitiesSectionProps {
   formData: PropertyFormData;
-  errors: PropertyFormErrors;
   handleInputChange: (field: keyof PropertyFormData, value: any) => void;
 }
 
 const AmenitiesSection: React.FC<AmenitiesSectionProps> = ({
   formData,
-  errors,
   handleInputChange,
 }) => {
   return (

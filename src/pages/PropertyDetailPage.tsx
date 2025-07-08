@@ -112,96 +112,121 @@ const PropertyDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <PropertyHeader
-        title={property.title}
-        location={property.location}
-        isFavorited={isFavorited}
-        onBackClick={() => window.history.back()} // Example back navigation
-        onFavoriteClick={handleFavoriteClick}
-        onShareClick={handleShareClick}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Image Gallery */}
-            {property.images && property.images.length > 0 && (
-                 <ImageGallery
-                    images={property.images}
-                    currentImageIndex={currentImageIndex}
-                    title={property.title}
-                    verified={property.verified || false}
-                    featured={property.featured || false}
-                    nextImage={nextImage}
-                    prevImage={prevImage}
-                    setCurrentImageIndex={setCurrentImageIndex}
-                />
-            )}
-
-            {/* Property Details */}
-            <PropertyDetails
-                property={property}
-                showAllAmenities={showAllAmenities}
-                setShowAllAmenities={setShowAllAmenities}
-             />
-
-            {/* Location Map */}
-            {property.location_details && (
-                <LocationMap
-                    address={property.location_details.address}
-                    coordinates={property.location_details.coordinates}
-                />
-            )}
-
-            {/* Reviews */}
-            {property.reviews && (
-              <ReviewsSection
-                reviews={property.reviews}
-              />
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              {/* Pricing Card */}
-               <PricingCard
-                  price={property.price}
-                  deposit={property.deposit}
-                  totalCost={property.totalCost}
-                  onGetContactDetailsClick={handleGetContactDetailsClick}
-                  onScheduleVisitClick={handleScheduleVisitClick}
-              />
-
-              {/* Owner Details */}
-              {property.owner && (
-                <OwnerDetails
-                  owner={property.owner}
-                  onRevealContactInfoClick={handleGetContactDetailsClick} // Uses the same modal trigger
-                />
-              )}
-
-              {/* Quick Actions */}
-               <QuickActions
-                onChatWithOwnerClick={handleChatWithOwnerClick}
-                onBookSiteVisitClick={handleBookSiteVisitClick}
-                onSharePropertyClick={handleSharePropertyClick}
+      {/* Property Images */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="relative">
+              <img
+                src={property.images?.[0] || property.image}
+                alt={property.title}
+                className="w-full h-96 object-cover rounded-lg"
               />
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              {property.images?.slice(1, 5).map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Property ${index + 2}`}
+                  className="w-full h-44 object-cover rounded-lg"
+                />
+              ))}
+            </div>
           </div>
+
+          {/* Header */}
+          <PropertyHeader
+            title={property.title}
+            location={property.location}
+            isFavorited={isFavorited}
+            onBackClick={() => window.history.back()} // Example back navigation
+            onFavoriteClick={handleFavoriteClick}
+            onShareClick={handleShareClick}
+          />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* Image Gallery */}
+                {property.images && property.images.length > 0 && (
+                     <ImageGallery
+                        images={property.images}
+                        currentImageIndex={currentImageIndex}
+                        title={property.title}
+                        verified={property.verified || false}
+                        featured={property.featured || false}
+                        nextImage={nextImage}
+                        prevImage={prevImage}
+                        setCurrentImageIndex={setCurrentImageIndex}
+                    />
+                )}
+
+                {/* Property Details */}
+                <PropertyDetails
+                    property={property}
+                    showAllAmenities={showAllAmenities}
+                    setShowAllAmenities={setShowAllAmenities}
+                 />
+
+                {/* Location Map */}
+                {property.location_details && (
+                    <LocationMap
+                        address={property.location_details.address}
+                        coordinates={property.location_details.coordinates}
+                    />
+                )}
+
+                {/* Reviews */}
+                {property.reviews && (
+                  <ReviewsSection
+                    reviews={property.reviews}
+                  />
+                )}
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-24 space-y-6">
+                  {/* Pricing Card */}
+                   <PricingCard
+                      price={property.price}
+                      deposit={property.deposit}
+                      totalCost={property.totalCost}
+                      onGetContactDetailsClick={handleGetContactDetailsClick}
+                      onScheduleVisitClick={handleScheduleVisitClick}
+                  />
+
+                  {/* Owner Details */}
+                  {property.owner && (
+                    <OwnerDetails
+                      owner={property.owner}
+                      onRevealContactInfoClick={handleGetContactDetailsClick} // Uses the same modal trigger
+                    />
+                  )}
+
+                  {/* Quick Actions */}
+                   <QuickActions
+                    onChatWithOwnerClick={handleChatWithOwnerClick}
+                    onBookSiteVisitClick={handleBookSiteVisitClick}
+                    onSharePropertyClick={handleSharePropertyClick}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Modal */}
+          {showContactModal && property?.owner && (
+            <ContactModal
+              show={showContactModal}
+              onClose={() => setShowContactModal(false)}
+              owner={property.owner}
+            />
+          )}
         </div>
       </div>
-
-      {/* Contact Modal */}
-      {showContactModal && property?.owner && (
-        <ContactModal
-          show={showContactModal}
-          onClose={() => setShowContactModal(false)}
-          owner={property.owner}
-        />
-      )}
     </div>
   );
 };

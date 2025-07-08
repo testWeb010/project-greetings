@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Check, Crown, Star, Gift, Users, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -152,12 +151,6 @@ const MembershipPage: React.FC = () => {
 
   const formatPrice = (price: number) => {
     return `₹${price.toLocaleString('en-IN')}`;
-  };
-
-  const calculateSavings = (monthlyPrice: number) => {
-    const yearlyPrice = monthlyPrice * 10;
-    const monthlyCost = monthlyPrice * 12;
-    return monthlyCost - yearlyPrice;
   };
 
   const faqs = [

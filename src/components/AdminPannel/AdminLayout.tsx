@@ -6,7 +6,6 @@ import {
   MessageCircle, 
   Settings, 
   BarChart3, 
-  Shield, 
   Bell, 
   Search, 
   Menu, 
@@ -19,11 +18,7 @@ import {
   Activity,
   Crown,
   UserCheck,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Eye,
-  Filter
+  AlertTriangle
 } from 'lucide-react';
 import AdminDashboard from './AdminDashboard';
 import UserManagement from './UserManagement'
@@ -52,7 +47,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [notifications, setNotifications] = useState(3);
+  const [notifications] = useState(3);
 
   // Mock admin user - in real app this would come from auth context
   const currentAdmin: AdminUser = {

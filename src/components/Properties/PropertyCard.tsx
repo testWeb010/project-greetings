@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MapPin, Users, Bed, Bath, Heart } from 'lucide-react';
 import { Property } from '../../types';
@@ -58,15 +59,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
             </div>
             <div className="flex items-center">
               <Users className="h-4 w-4 mr-1" />
-              <span>{property.totalMembers}</span> {/* Assuming 'members' in original is totalMembers */}
+              <span>{property.members || 1}</span>
             </div>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-1 mb-3">
-          {property.amenities.slice(0, 3).map(amenity => (
+          {property.amenities.slice(0, 3).map((amenity, index) => (
             <span
-              key={amenity}
+              key={index}
               className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
             >
               {amenity}

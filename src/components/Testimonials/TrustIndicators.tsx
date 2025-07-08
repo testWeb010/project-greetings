@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, CheckCircle, MessageCircle, Heart } from 'lucide-react';
+import { Shield, Star, Users, Award } from 'lucide-react';
 
 interface TrustIndicator {
   icon: React.ElementType;

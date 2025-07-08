@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MapPin, Users, Bed, Bath, Square, Heart } from 'lucide-react';
 import { Property } from '../../types';
@@ -65,7 +66,7 @@ const PropertyListItem: React.FC<PropertyListItemProps> = ({ property, onClick }
             </div>
             <div className="flex items-center">
               <Users className="h-4 w-4 mr-1" />
-              <span>{property.totalMembers} Members</span> {/* Assuming 'members' in original is totalMembers */}
+              <span>{property.members || 1} Members</span>
             </div>
             <div className="flex items-center">
               <Square className="h-4 w-4 mr-1" />
@@ -74,9 +75,9 @@ const PropertyListItem: React.FC<PropertyListItemProps> = ({ property, onClick }
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            {property.amenities.map(amenity => (
+            {property.amenities.map((amenity, index) => (
               <span
-                key={amenity}
+                key={index}
                 className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
               >
                 {amenity}

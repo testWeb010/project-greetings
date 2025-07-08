@@ -1,92 +1,90 @@
 import React from 'react';
-import { Filter, Tag } from 'lucide-react';
-import { BlogPost } from '../../types';
+import { Search, Calendar, User } from 'lucide-react';
 
 interface BlogSidebarProps {
-  categories: { key: string; label: string; count: number }[];
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  // Assuming popular tags might become dynamic later, add a prop for them
-  // popularTags: string[]; 
+  // Define any props for the sidebar here
 }
 
-const BlogSidebar: React.FC<BlogSidebarProps> = ({
-  categories,
-  selectedCategory,
-  setSelectedCategory,
-  // popularTags,
-}) => {
-  // Hardcoded popular tags for now, will be replaced with a prop/fetch later
-  const popularTags = ['Student Life', 'PG', 'Safety', 'Budget', 'Tips', 'Bangalore', 'Delhi', 'Mumbai'];
-
+const BlogSidebar: React.FC<BlogSidebarProps> = () => {
   return (
-    <div className="sticky top-8 space-y-8">
-      {/* Categories */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-          <Filter className="h-5 w-5 mr-2 text-blue-600" />
-          Categories
-        </h3>
-        <div className="space-y-2">
-          {categories.map((category) => (
-            <button
-              key={category.key}
-              onClick={() => setSelectedCategory(category.key)}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                selectedCategory === category.key
-                  ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-medium">{category.label}</span>
-                <span className={`text-sm px-2 py-1 rounded-full ${
-                  selectedCategory === category.key
-                    ? 'bg-blue-100 text-blue-600'
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {category.count}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Popular Tags */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-          <Tag className="h-5 w-5 mr-2 text-blue-600" />
-          Popular Tags
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {popularTags.map((tag) => (
-            <button
-              key={tag}
-              className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors text-sm font-medium"
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Newsletter */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
-        <h3 className="text-xl font-bold mb-4">Stay Updated</h3>
-        <p className="text-blue-100 mb-4">
-          Get the latest tips and guides delivered to your inbox.
-        </p>
-        <div className="space-y-3">
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">Search</h3>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
           <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full px-4 py-3 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-300"
+            type="search"
+            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Search articles..."
+            required
           />
-          <button className="w-full bg-white text-blue-600 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors font-semibold">
-            Subscribe
-          </button>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">Categories</h3>
+        <ul className="space-y-2">
+          <li>
+            <a href="#" className="text-gray-700 hover:text-blue-600">
+              Web Development
+            </a>
+          </li>
+          <li>
+            <a href="#" className="text-gray-700 hover:text-blue-600">
+              Mobile Development
+            </a>
+          </li>
+          <li>
+            <a href="#" className="text-gray-700 hover:text-blue-600">
+              Design
+            </a>
+          </li>
+          <li>
+            <a href="#" className="text-gray-700 hover:text-blue-600">
+              Marketing
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">Recent Posts</h3>
+        <ul className="space-y-4">
+          <li className="flex space-x-3">
+            <img
+              src="https://via.placeholder.com/80"
+              alt="Recent Post"
+              className="w-20 h-16 object-cover rounded"
+            />
+            <div>
+              <a href="#" className="text-gray-700 hover:text-blue-600">
+                The Future of JavaScript
+              </a>
+              <p className="text-gray-500 text-sm">
+                <Calendar className="inline-block w-4 h-4 mr-1" />
+                October 12, 2024
+              </p>
+            </div>
+          </li>
+          <li className="flex space-x-3">
+            <img
+              src="https://via.placeholder.com/80"
+              alt="Recent Post"
+              className="w-20 h-16 object-cover rounded"
+            />
+            <div>
+              <a href="#" className="text-gray-700 hover:text-blue-600">
+                CSS Tips and Tricks
+              </a>
+              <p className="text-gray-500 text-sm">
+                <Calendar className="inline-block w-4 h-4 mr-1" />
+                October 5, 2024
+              </p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   );

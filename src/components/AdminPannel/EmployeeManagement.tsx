@@ -7,16 +7,14 @@ import {
   Eye, 
   UserCheck, 
   UserX,
-  Crown,
   Shield,
-  Calendar,
-  Mail,
   Phone,
   Activity,
   AlertTriangle,
   CheckCircle,
   Clock,
-  Settings
+  Settings,
+  Calendar
 } from 'lucide-react';
 
 interface AdminUser {

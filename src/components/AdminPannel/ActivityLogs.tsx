@@ -2,23 +2,15 @@ import React, { useState } from 'react';
 import { 
   Search, 
   Filter, 
-  Download, 
-  Calendar,
-  Clock,
-  User,
-  Activity,
+  Activity, 
+  Users, 
+  MessageCircle,
+  Eye,
+  Download,
+  RefreshCw,
   AlertTriangle,
   CheckCircle,
-  Edit,
-  Trash2,
-  Eye,
-  Plus,
-  Settings,
-  Shield,
-  Ban,
-  UserCheck,
-  Building,
-  MessageCircle
+  Clock
 } from 'lucide-react';
 
 interface AdminUser {

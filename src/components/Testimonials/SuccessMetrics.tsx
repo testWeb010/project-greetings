@@ -1,5 +1,4 @@
 import React from 'react';
-import { Calendar, Award, Star, Shield } from 'lucide-react';
 
 interface SuccessMetric {
   metric: string;

@@ -1,12 +1,10 @@
 import React from 'react';
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  // Define pagination props here
 }
 
-const Pagination: React.FC<PaginationProps> = (props) => {
+const Pagination: React.FC<PaginationProps> = () => {
   // Placeholder pagination buttons. 
   // This will need to be updated to handle active state, total pages, etc.
   return (

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Mail, Lock, Phone, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 interface SignInFormProps {
   formData: any; // Replace 'any' with a specific type if available

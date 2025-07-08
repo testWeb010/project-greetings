@@ -6,15 +6,9 @@ import {
   TrendingUp, 
   TrendingDown,
   DollarSign,
-  Eye,
-  Calendar,
-  Clock,
   CheckCircle,
   AlertTriangle,
-  Star,
   MapPin,
-  Filter,
-  Download,
   RefreshCw
 } from 'lucide-react';
 
