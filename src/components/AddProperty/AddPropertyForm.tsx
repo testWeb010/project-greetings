@@ -325,7 +325,6 @@ const AddPropertyForm: React.FC = () => {
 
           <AmenitiesSection
              formData={formData}
-             errors={errors} // Although errors not currently used in this section, keep for consistency/future validation
              handleInputChange={handleInputChange}
           />
 

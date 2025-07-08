@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Zap,
@@ -9,7 +10,7 @@ import {
   UtensilsCrossed,
   Users // Added Users icon
 } from 'lucide-react';
-import { PropertyFormData, PropertyFormErrors } from '../../types';
+import { PropertyFormData } from '../../types';
 
 interface AmenitiesSectionProps {
   formData: PropertyFormData;

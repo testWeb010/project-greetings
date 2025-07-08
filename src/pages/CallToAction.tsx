@@ -8,32 +8,39 @@ import FinalCTA from '../components/CallToAction/FinalCTA';
 
 const CallToAction: React.FC = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-32 h-32 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 rounded-2xl blur-3xl animate-pulse delay-1000 transform rotate-12"></div>
-        <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-gradient-to-r from-orange-400/20 to-pink-400/20 rounded-full blur-2xl animate-pulse delay-2000"></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Main CTA Section */}
-        <MainCTA />
-
-        {/* Features Grid */}
-        <FeaturesGrid />
-
-        {/* Achievement Stats */}
-        <AchievementStats />
-
-        {/* Contact Methods */}
-        <ContactMethods />
-
-        {/* App Features Section */}
-        <AppFeatures />
-
-        {/* Final CTA */}
-        <FinalCTA />
+    <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+            Ready to Find Your Perfect Home?
+          </h2>
+          <p className="mt-4 text-xl text-blue-100">
+            Join thousands of students who have found their ideal accommodation through our platform.
+          </p>
+          <div className="mt-8">
+            <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">
+              Start Your Search
+            </button>
+          </div>
+        </div>
+        
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <AchievementStats
+            title="Properties Listed"
+            value="10,000+"
+            description="Verified properties across India"
+          />
+          <AchievementStats
+            title="Happy Students"
+            value="25,000+"
+            description="Students found their perfect home"
+          />
+          <AchievementStats
+            title="Cities Covered"
+            value="50+"
+            description="Major cities across India"
+          />
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MapPin, Users, Bed, Bath, Square, Heart } from 'lucide-react';
 import { Property } from '../../types';
@@ -8,7 +7,16 @@ interface PropertyListItemProps {
   onClick: () => void;
 }
 
-const PropertyListItem: React.FC<PropertyListItemProps> = ({ property, onClick }) => {
+const PropertyListItem: React.FC<PropertyListItemProps> = ({ property }) => {
+  const amenities = [
+    { icon: '🏠', name: 'Electricity', available: property.electricityIncluded },
+    { icon: '🍽️', name: 'Kitchen', available: property.kitchenAvailable },
+    { icon: '🚿', name: 'Washroom', available: property.washroomAvailable },
+    { icon: '❄️', name: 'AC', available: property.ac },
+    { icon: '💧', name: 'RO Water', available: property.roWater },
+    { icon: '🍽️', name: 'Food Service', available: property.foodServiceAvailable }
+  ];
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -18,7 +26,7 @@ const PropertyListItem: React.FC<PropertyListItemProps> = ({ property, onClick }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer" onClick={onClick}>
+    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
       <div className="flex">
         <div className="relative w-64 flex-shrink-0">
           <img
@@ -75,13 +83,18 @@ const PropertyListItem: React.FC<PropertyListItemProps> = ({ property, onClick }
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            {property.amenities.map((amenity, index) => (
-              <span
+            {amenities.slice(0, 4).map((amenity, index) => (
+              <div
                 key={index}
-                className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
+                  amenity.available
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-gray-100 text-gray-500'
+                }`}
               >
-                {amenity}
-              </span>
+                <span>{amenity.icon}</span>
+                <span>{amenity.name}</span>
+              </div>
             ))}
           </div>
 

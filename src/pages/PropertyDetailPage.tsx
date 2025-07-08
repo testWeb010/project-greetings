@@ -150,18 +150,25 @@ const PropertyDetailPage: React.FC = () => {
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Image Gallery */}
-                {property.images && property.images.length > 0 && (
-                     <ImageGallery
-                        images={property.images}
-                        currentImageIndex={currentImageIndex}
-                        title={property.title}
-                        verified={property.verified || false}
-                        featured={property.featured || false}
-                        nextImage={nextImage}
-                        prevImage={prevImage}
-                        setCurrentImageIndex={setCurrentImageIndex}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                  <div className="lg:col-span-2">
+                    <img
+                      src={property?.images?.[0] || '/placeholder-image.jpg'}
+                      alt="Property main"
+                      className="w-full h-96 object-cover rounded-lg"
                     />
-                )}
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                    {property?.images?.slice(1, 3).map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Property ${index + 2}`}
+                        className="w-full h-44 lg:h-44 object-cover rounded-lg"
+                      />
+                    ))}
+                  </div>
+                </div>
 
                 {/* Property Details */}
                 <PropertyDetails
@@ -191,11 +198,9 @@ const PropertyDetailPage: React.FC = () => {
                 <div className="sticky top-24 space-y-6">
                   {/* Pricing Card */}
                    <PricingCard
-                      price={property.price}
-                      deposit={property.deposit}
-                      totalCost={property.totalCost}
-                      onGetContactDetailsClick={handleGetContactDetailsClick}
-                      onScheduleVisitClick={handleScheduleVisitClick}
+                      price={property.totalRent}
+                      currency="INR"
+                      rentIncludes={['Electricity', 'Water', 'Maintenance']}
                   />
 
                   {/* Owner Details */}

@@ -1,51 +1,34 @@
+
 import React from 'react';
-import { Building, User, PlusCircle, BookOpen } from 'lucide-react';
 
 interface DesktopNavItemsProps {
-  onPageChange: (page: string) => void;
-  currentPage: string;
+  activePage: string;
+  handleNavigation: (page: string) => void;
 }
 
-const DesktopNavItems: React.FC<DesktopNavItemsProps> = ({ onPageChange, currentPage }) => {
+const DesktopNavItems: React.FC<DesktopNavItemsProps> = ({ activePage, handleNavigation }) => {
   const navItems = [
-    {
-      name: 'Home',
-      page: 'home',
-      icon: Building,
-    },
-    {
-      name: 'Properties',
-      page: 'properties',
-      icon: BookOpen,
-    },
-    {
-      name: 'Add Property',
-      page: 'add-property',
-      icon: PlusCircle,
-    },
-    {
-      name: 'Membership',
-      page: 'membership',
-      icon: User,
-    },
-    {
-      name: 'Blog',
-      page: 'blog',
-      icon: BookOpen,
-    },
+    { key: 'home', label: 'Home' },
+    { key: 'properties', label: 'Properties' },
+    { key: 'add-property', label: 'Add Property' },
+    { key: 'membership', label: 'Membership' },
+    { key: 'blog', label: 'Blog' },
+    { key: 'chat', label: 'Chat' }
   ];
 
   return (
-    <div className="hidden lg:flex items-center space-x-6">
+    <div className="hidden md:flex items-center space-x-8">
       {navItems.map((item) => (
         <button
-          key={item.name}
-          onClick={() => onPageChange(item.page)}
-          className={`text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200 ${
-            currentPage === item.page ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''
+          key={item.key}
+          onClick={() => handleNavigation(item.key)}
+          className={`text-sm font-medium transition-colors ${
+            activePage === item.key
+              ? 'text-blue-600'
+              : 'text-gray-700 hover:text-blue-600'
           }`}
         >
-          {item.name}
+          {item.label}
         </button>
       ))}
     </div>

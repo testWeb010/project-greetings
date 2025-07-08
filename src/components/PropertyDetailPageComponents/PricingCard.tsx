@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface PricingCardProps {
@@ -6,7 +7,7 @@ interface PricingCardProps {
   rentIncludes: string[];
 }
 
-const PricingCard: React.FC<PricingCardProps> = ({ price, currency, rentIncludes }) => {
+const PricingCard: React.FC<PricingCardProps> = ({ price, rentIncludes }) => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',

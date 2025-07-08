@@ -1,8 +1,11 @@
+
 import React from 'react';
-import { Search, Calendar, User } from 'lucide-react';
+import { Search, Tag, Calendar } from 'lucide-react';
 
 interface BlogSidebarProps {
-  // Define any props for the sidebar here
+  categories: { key: string; label: string; count: number }[];
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
 }
 
 const BlogSidebar: React.FC<BlogSidebarProps> = () => {

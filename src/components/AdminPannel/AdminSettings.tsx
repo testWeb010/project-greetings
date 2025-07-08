@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { 
   Save, 
   Upload, 
-  Bell, 
-  Shield,
-  Users,
-  Settings,
-  Database,
-  RefreshCw
+  Database
 } from 'lucide-react';
 
 interface AdminUser {
@@ -24,7 +19,7 @@ interface AdminSettingsProps {
   currentAdmin: AdminUser;
 }
 
-const AdminSettings: React.FC<AdminSettingsProps> = ({ currentAdmin }) => {
+const AdminSettings: React.FC<AdminSettingsProps> = () => {
   const [siteName, setSiteName] = useState('HomeDaze');
   const [logo, setLogo] = useState('https://example.com/logo.png');
   const [theme, setTheme] = useState('light');
@@ -130,7 +125,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ currentAdmin }) => {
             <label className="inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value={notificationSettings.email}
+                checked={notificationSettings.email}
                 onChange={() => setNotificationSettings({ ...notificationSettings, email: !notificationSettings.email })}
                 className="sr-only peer"
               />
@@ -144,7 +139,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ currentAdmin }) => {
             <label className="inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value={notificationSettings.push}
+                checked={notificationSettings.push}
                 onChange={() => setNotificationSettings({ ...notificationSettings, push: !notificationSettings.push })}
                 className="sr-only peer"
               />
@@ -158,7 +153,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ currentAdmin }) => {
             <label className="inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value={notificationSettings.sms}
+                checked={notificationSettings.sms}
                 onChange={() => setNotificationSettings({ ...notificationSettings, sms: !notificationSettings.sms })}
                 className="sr-only peer"
               />
