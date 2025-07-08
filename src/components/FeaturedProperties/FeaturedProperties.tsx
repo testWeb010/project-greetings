@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
-import { TrendingUp, Building, ChevronRight } from 'lucide-react'; // Keep only necessary icons for this component
+import { TrendingUp, Building, ChevronRight } from 'lucide-react';
 import PropertyFilterTabs from './PropertyFilterTabs';
 import PropertyCarousel from './PropertyCarousel';
 import FeaturedPropertiesCTA from './FeaturedPropertiesCTA';
-import { FeaturedProperty } from '../../types'; // Assuming FeaturedProperty type is in types/index.ts
+import { FeaturedProperty } from '../../types';
 
 const FeaturedProperties: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -167,7 +166,6 @@ const FeaturedProperties: React.FC = () => {
     console.log('Start chat for property:', id);
   };
 
-
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -190,6 +188,7 @@ const FeaturedProperties: React.FC = () => {
 
         {/* Filter Tabs */}
         <PropertyFilterTabs
+          activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
           propertiesCount={propertiesCount}
         />
@@ -218,4 +217,3 @@ const FeaturedProperties: React.FC = () => {
 };
 
 export default FeaturedProperties;
-

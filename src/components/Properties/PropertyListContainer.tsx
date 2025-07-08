@@ -14,6 +14,8 @@ interface PropertyListContainerProps {
   onViewModeChange: (mode: 'grid' | 'list') => void;
   onPageChange: (page: number) => void;
   onPropertyClick: (property: Property) => void;
+  searchQuery: string;
+  filters: any;
 }
 
 const PropertyListContainer: React.FC<PropertyListContainerProps> = ({

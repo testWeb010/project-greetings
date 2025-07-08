@@ -1,234 +1,270 @@
-import React, { useState, useEffect } from 'react';
-import { Testimonial } from '../types'; // Keep the type import
-import { Users, Building, MapPin, Star, Calendar, Award, Shield, CheckCircle, MessageCircle, Heart } from 'lucide-react'; // Import icons used in this file
 
-// Import all the new components
+import React, { useState } from 'react';
+import TrustIndicators from '../components/Testimonials/TrustIndicators';
 import TestimonialHeader from '../components/Testimonials/TestimonialHeader';
 import TestimonialFilters from '../components/Testimonials/TestimonialFilters';
 import TestimonialCarousel from '../components/Testimonials/TestimonialCarousel';
-import SuccessMetrics from '../components/Testimonials/SuccessMetrics';
-import AchievementStats from '../components/Testimonials/AchievementStats';
 import VideoTestimonials from '../components/Testimonials/VideoTestimonials';
-import TrustIndicators from '../components/Testimonials/TrustIndicators';
+import AchievementStats from '../components/Testimonials/AchievementStats';
+import SuccessMetrics from '../components/Testimonials/SuccessMetrics';
 import TestimonialsCTA from '../components/Testimonials/TestimonialsCTA';
 
-// Define types for other data structures used in this component
-interface Achievement {
-  number: string;
-  label: string;
-  icon: React.ElementType; // Use React.ElementType for icon component
-  color: string;
-  bgColor: string;
+interface TestimonialUser {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  location: string;
+  university?: string;
+  propertyType?: string;
 }
 
-interface SuccessMetric {
-  metric: string;
-  label: string;
-  icon: React.ElementType; // Use React.ElementType for icon component
-}
-
-interface VideoTestimonial {
-  id: number;
-  title: string;
-  student: string;
-  image: string;
-}
-
-interface TrustIndicator {
-  icon: React.ElementType; // Use React.ElementType for icon component
-  title: string;
-  description: string;
+interface Testimonial {
+  id: string;
+  user: TestimonialUser;
+  content: string;
+  rating: number;
+  date: string;
+  category: string;
+  verified: boolean;
+  helpful: number;
+  featured: boolean;
+  tags: string[];
+  propertyDetails?: {
+    name: string;
+    location: string;
+    rent: number;
+  };
 }
 
 const Testimonials: React.FC = () => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [selectedRating, setSelectedRating] = useState(0);
 
-  // --- Data Fetching ---
-  // TODO: Replace with API call to fetch testimonials on component mount
-  useEffect(() => {
-    // Example API call placeholder:
-    // fetch('/api/testimonials')
-    //   .then(response => response.json())
-    //   .then(data => setTestimonials(data))
-    //   .catch(error => console.error('Error fetching testimonials:', error));
-
-    // Using static data for now
-    const staticTestimonials: Testimonial[] = [
-      {
+  const testimonials: Testimonial[] = [
+    {
+      id: '1',
+      user: {
         id: '1',
         name: 'Priya Sharma',
-        role: 'Computer Science Student',
-        content: 'HomeDaze completely transformed my accommodation search! The direct chat feature helped me connect with the owner instantly, and I found my perfect PG in Bangalore within just 2 days. The verification process gave me complete confidence in my choice.',
-        rating: 5,
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg',
-        propertyType: 'Girls PG',
-        location: 'Koramangala, Bangalore'
-      },
-      {
-        id: '2',
-        name: 'Rajesh Kumar',
-        role: 'MBA Student',
-        content: 'As a student on a tight budget, I was worried about finding good accommodation. HomeDaze not only helped me find an affordable shared room but also connected me with amazing roommates who became lifelong friends. The platform is truly a game-changer!',
-        rating: 5,
-        avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
-        propertyType: 'Shared Room',
-        location: 'Hauz Khas, Delhi'
-      },
-      {
-        id: '3',
-        name: 'Sneha Patel',
         role: 'Engineering Student',
-        content: 'The safety features and verified properties on HomeDaze gave my parents complete peace of mind. I found a secure PG near my college with all modern amenities. The 24/7 chat support was incredibly helpful throughout my entire journey.',
-        rating: 5,
+        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg',
+        location: 'Bangalore',
+        university: 'IIT Bangalore',
+        propertyType: 'PG'
+      },
+      content: 'The platform made finding a safe and comfortable PG so easy! I was able to directly chat with property owners and got verified details. The verification process gave me confidence, and I found my perfect accommodation within a week.',
+      rating: 5,
+      date: '2024-01-15',
+      category: 'student',
+      verified: true,
+      helpful: 24,
+      featured: true,
+      tags: ['Safe', 'Quick Process', 'Verified Properties'],
+      propertyDetails: {
+        name: 'Green Valley PG',
+        location: 'Koramangala, Bangalore',
+        rent: 12000
+      }
+    },
+    {
+      id: '2',
+      user: {
+        id: '2',
+        name: 'Rahul Gupta',
+        role: 'Property Owner',
+        avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
+        location: 'Delhi',
+        propertyType: 'Shared Room'
+      },
+      content: 'As a property owner, this platform has been incredible. The quality of tenants is excellent, and the screening process ensures I get serious inquiries. My properties are always occupied thanks to the platform\'s reach.',
+      rating: 5,
+      date: '2024-01-12',
+      category: 'owner',
+      verified: true,
+      helpful: 18,
+      featured: true,
+      tags: ['Quality Tenants', 'Good Reach', 'Easy Management']
+    },
+    {
+      id: '3',
+      user: {
+        id: '3',
+        name: 'Anjali Reddy',
+        role: 'Working Professional',
         avatar: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg',
-        propertyType: 'Co-ed PG',
-        location: 'Andheri, Mumbai'
+        location: 'Mumbai',
+        propertyType: 'Single Room'
       },
-      {
+      content: 'Moving to Mumbai for work was stressful, but this platform made accommodation hunting a breeze. The filters helped me find exactly what I needed, and the virtual tours saved so much time. Highly recommended!',
+      rating: 4,
+      date: '2024-01-10',
+      category: 'professional',
+      verified: true,
+      helpful: 15,
+      featured: false,
+      tags: ['Virtual Tours', 'Time Saving', 'Professional Service']
+    },
+    {
+      id: '4',
+      user: {
         id: '4',
-        name: 'Amit Singh',
-        role: 'Medical Student',
-        content: 'Being new to the city, I was nervous about finding accommodation. HomeDaze\'s verified listings and direct owner contact made everything transparent and trustworthy. Found my single room near the hospital within a week!',
-        rating: 5,
+        name: 'Vikram Singh',
+        role: 'MBA Student',
         avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg',
-        propertyType: 'Single Room',
-        location: 'Sector 62, Noida'
+        location: 'Hyderabad',
+        university: 'ISB Hyderabad',
+        propertyType: 'Co-living'
       },
-      {
+      content: 'The co-living space I found through this platform exceeded my expectations. The community aspect was exactly what I was looking for, and the amenities were as advertised. Great experience overall!',
+      rating: 5,
+      date: '2024-01-08',
+      category: 'student',
+      verified: true,
+      helpful: 21,
+      featured: true,
+      tags: ['Co-living', 'Community', 'Great Amenities']
+    },
+    {
+      id: '5',
+      user: {
         id: '5',
-        name: 'Kavya Reddy',
-        role: 'Design Student',
-        content: 'The free chat credits were a lifesaver! I could talk to multiple property owners before making my decision. The platform is so student-friendly, and the membership plans are very affordable for our budgets.',
-        rating: 5,
+        name: 'Sneha Patel',
+        role: 'Research Scholar',
         avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg',
-        propertyType: 'Studio Apartment',
-        location: 'Whitefield, Bangalore'
+        location: 'Pune',
+        university: 'University of Pune',
+        propertyType: 'PG'
       },
-      {
-        id: '6',
-        name: 'Arjun Mehta',
-        role: 'Law Student',
-        content: 'HomeDaze made my transition to a new city seamless. The detailed property descriptions and honest reviews helped me make an informed decision. The zero brokerage policy saved me thousands of rupees!',
-        rating: 5,
-        avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg',
-        propertyType: 'Co-living',
-        location: 'Powai, Mumbai'
-      },
-    ];
-    setTestimonials(staticTestimonials);
-  }, []); // Empty dependency array means this runs once on mount
-
-  // TODO: Replace with API call to fetch achievement stats
-  const achievements: Achievement[] = [
-    { number: '50L+', label: 'Happy Students', icon: Users, color: 'from-blue-500 to-cyan-500', bgColor: 'from-blue-50 to-cyan-50' },
-    { number: '10L+', label: 'Properties Listed', icon: Building, color: 'from-emerald-500 to-green-500', bgColor: 'from-emerald-50 to-green-50' },
-    { number: '500+', label: 'Cities Covered', icon: MapPin, color: 'from-purple-500 to-pink-500', bgColor: 'from-purple-50 to-pink-50' },
-    { number: '99%', label: 'Satisfaction Rate', icon: Star, color: 'from-orange-500 to-red-500', bgColor: 'from-orange-50 to-red-50' },
+      content: 'Budget-friendly and safe options for female students are rare, but this platform delivered. The owner verification and safety ratings helped me make an informed decision. Very satisfied with my choice!',
+      rating: 4,
+      date: '2024-01-05',
+      category: 'student',
+      verified: true,
+      helpful: 12,
+      featured: false,
+      tags: ['Budget-friendly', 'Safe for Females', 'Informed Decision']
+    }
   ];
 
-  // TODO: Replace with API call to fetch success metrics
-  const successMetrics: SuccessMetric[] = [
-    { metric: '2.5 Days', label: 'Average Time to Find Home', icon: Calendar },
-    { metric: '₹15,000', label: 'Average Savings on Brokerage', icon: Award },
-    { metric: '4.8/5', label: 'Average Property Rating', icon: Star },
-    { metric: '24/7', label: 'Customer Support', icon: Shield }
+  const videoTestimonials = [
+    {
+      id: '1',
+      user: testimonials[0].user,
+      thumbnailUrl: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg',
+      videoUrl: '#',
+      title: 'How I Found My Dream PG in Bangalore',
+      duration: '2:30',
+      views: 1240
+    },
+    {
+      id: '2',
+      user: testimonials[1].user,
+      thumbnailUrl: 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg',
+      videoUrl: '#',
+      title: 'Property Owner Success Story',
+      duration: '3:15',
+      views: 890
+    }
   ];
 
-  // TODO: Replace with API call to fetch video testimonials
-  const videos: VideoTestimonial[] = [
-    { id: 1, title: 'From Search to Home in 48 Hours', student: 'Priya\'s Journey', image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg' },
-    { id: 2, title: 'Finding the Perfect Roommate', student: 'Rajesh\'s Story', image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg' },
-    { id: 3, title: 'Safe & Secure Student Living', student: 'Sneha\'s Experience', image: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg' }
-  ];
-
-  // TODO: Replace with API call to fetch trust indicators if dynamic
-   const trustIndicators: TrustIndicator[] = [
-    { icon: CheckCircle, title: '100% Verified Properties', description: 'Every property and owner is thoroughly verified by our expert team for complete safety and authenticity' },
-    { icon: MessageCircle, title: 'Direct Owner Chat', description: 'Chat directly with property owners instantly without any middleman or hidden charges' },
-    { icon: Heart, title: 'Student-First Approach', description: 'Designed with students\' budgets, needs, and safety as our top priority' },
-  ];
-  // --- End Data Fetching ---
-
-  // Derived state (can remain here or be moved to a custom hook if complex)
   const categories = [
-    { key: 'all', label: 'All Stories', count: testimonials.length },
-    { key: 'PG', label: 'PG Stories', count: testimonials.filter(t => t.propertyType.includes('PG')).length },
-    { key: 'Shared', label: 'Shared Room', count: testimonials.filter(t => t.propertyType.includes('Shared')).length },
-    { key: 'Single', label: 'Single Room', count: testimonials.filter(t => t.propertyType.includes('Single')).length },
+    { key: 'all', label: 'All Reviews', count: testimonials.length },
+    { key: 'student', label: 'Students', count: testimonials.filter(t => t.category === 'student').length },
+    { key: 'professional', label: 'Professionals', count: testimonials.filter(t => t.category === 'professional').length },
+    { key: 'owner', label: 'Property Owners', count: testimonials.filter(t => t.category === 'owner').length }
   ];
 
-  const filteredTestimonials = activeCategory === 'all'
-    ? testimonials
-    : testimonials.filter(t => t.propertyType.toLowerCase().includes(activeCategory.toLowerCase()));
+  const filteredTestimonials = testimonials.filter(testimonial => {
+    const matchesCategory = activeFilter === 'all' || testimonial.category === activeFilter;
+    const matchesRating = selectedRating === 0 || testimonial.rating >= selectedRating;
+    return matchesCategory && matchesRating;
+  });
 
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % filteredTestimonials.length);
-  };
-
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + filteredTestimonials.length) % filteredTestimonials.length);
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setActiveCategory(category);
-    setCurrentTestimonial(0); // Reset to the first testimonial when category changes
-  };
-
-   const handleIndicatorClick = (index: number) => {
-    setCurrentTestimonial(index);
-  };
+  const trustIndicators = [
+    {
+      id: 'verified',
+      title: 'Verified Reviews',
+      value: '10,000+',
+      icon: 'Shield',
+      color: 'blue'
+    },
+    {
+      id: 'rating',
+      title: 'Average Rating',
+      value: '4.8/5',
+      icon: 'Star',
+      color: 'yellow'
+    },
+    {
+      id: 'satisfaction',
+      title: 'Satisfaction Rate',
+      value: '96%',
+      icon: 'ThumbsUp',
+      color: 'green'
+    }
+  ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-[10%] w-80 h-80 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-[15%] w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-[20%] w-64 h-64 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section */}
+      <TestimonialHeader />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <TestimonialHeader />
+      {/* Trust Indicators */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TrustIndicators />
+        </div>
+      </section>
 
-        {/* Category Filters */}
-        <TestimonialFilters
-          categories={categories}
-          activeCategory={activeCategory}
-          setActiveCategory={handleCategoryChange} // Pass the handler
-        />
-
-        {/* Main Testimonial Showcase */}
-        {filteredTestimonials.length > 0 && (
-          <TestimonialCarousel
-            filteredTestimonials={filteredTestimonials}
-            currentTestimonial={currentTestimonial}
-            onNext={nextTestimonial}
-            onPrev={prevTestimonial}
-            onIndicatorClick={handleIndicatorClick} // Pass the handler
-             // renderStars is now internal to TestimonialCarousel
+      {/* Filters */}
+      <section className="py-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TestimonialFilters
+            categories={categories}
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
           />
-        )}
+        </div>
+      </section>
 
+      {/* Testimonials Carousel */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TestimonialCarousel testimonials={filteredTestimonials} />
+        </div>
+      </section>
 
-        {/* Success Metrics */}
-        <SuccessMetrics metrics={successMetrics} />
+      {/* Video Testimonials */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <VideoTestimonials videos={videoTestimonials} />
+        </div>
+      </section>
 
-        {/* Achievement Stats */}
-        <AchievementStats achievements={achievements} />
+      {/* Achievement Stats */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AchievementStats />
+        </div>
+      </section>
 
-        {/* Video Testimonials */}
-        <VideoTestimonials videos={videos} />
+      {/* Success Metrics */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SuccessMetrics />
+        </div>
+      </section>
 
-        {/* Trust Indicators */}
-        <TrustIndicators indicators={trustIndicators} />
-
-        {/* Final CTA */}
-        <TestimonialsCTA />
-      </div>
-    </section>
+      {/* CTA Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TestimonialsCTA />
+        </div>
+      </section>
+    </div>
   );
 };
 

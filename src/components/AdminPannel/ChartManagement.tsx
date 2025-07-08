@@ -437,10 +437,7 @@ const ChatManagement: React.FC<ChatManagementProps> = ({ currentAdmin }) => {
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => {
-                            setSelectedChat(chat);
-                            setShowChatModal(true);
-                          }}
+                          onClick={() => handleChatAction('view', chat.id)}
                           className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                         >
                           <Eye className="h-4 w-4" />

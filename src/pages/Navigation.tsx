@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import AuthModal from './AuthModel';
 import TopBar from '../components/Navigation/TopBar';
 import MainNavbar from '../components/Navigation/MainNavbar';
-import { Home, UserPlus, Search, MessageCircle } from 'lucide-react'; // Import icons used in navItems
+import { Home, UserPlus, Search, MessageCircle } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;
@@ -13,14 +14,12 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServicesDropdown, setShowServicesDropdown] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Consider managing dark mode globally
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
-  // TODO: Fetch user data and chat credits from your authentication context or an API endpoint
-  // Example: const { user, chatCredits } = useAuth();
-  const user = null; // Placeholder: Set to actual user object when logged in, null when logged out
-  const chatCredits = 6; // Placeholder: Fetch dynamically
+  const user = null;
+  const chatCredits = 6;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,14 +37,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
     }
   }, [isDarkMode]);
 
-  // Define navigation items - TODO: Consider fetching these dynamically from an API if they change frequently
   const navItems = [
     { name: 'Home', key: 'home' as const },
     { name: 'Properties', key: 'properties' as const },
     {
       name: 'Services',
       dropdown: [
-        { name: 'Find PG/Rooms', icon: Home }, // Use imported icons
+        { name: 'Find PG/Rooms', icon: Home },
         { name: 'Find Roommates', icon: UserPlus },
         { name: 'Property Verification', icon: Search },
         { name: 'Chat Support', icon: MessageCircle }
@@ -62,25 +60,24 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
 
   return (
     <>
-      <TopBar /> {/* Use the new TopBar component */}
+      <TopBar />
 
       <MainNavbar
         isScrolled={isScrolled}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        isDarkMode={isDarkMode} // Pass dark mode state and handler
+        isDarkMode={isDarkMode}
         setIsDarkMode={setIsDarkMode}
         currentPage={currentPage}
         onPageChange={onPageChange}
-        handleAuthClick={handleAuthClick} // Pass auth handler
-        user={user} // Pass user data
-        chatCredits={chatCredits} // Pass chat credits
-        navItems={navItems} // Pass navigation items
-        showServicesDropdown={showServicesDropdown} // Pass dropdown state and handler
+        handleAuthClick={handleAuthClick}
+        user={user}
+        chatCredits={chatCredits}
+        navItems={navItems}
+        showServicesDropdown={showServicesDropdown}
         setShowServicesDropdown={setShowServicesDropdown}
-      /> {/* Use the new MainNavbar component */}
+      />
 
-      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}

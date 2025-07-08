@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { ChevronDown, Building } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 interface NavItem {
   name: string;

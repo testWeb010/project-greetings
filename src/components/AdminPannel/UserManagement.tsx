@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import { 
   Search, 
   Plus, 
   Users, 
-  Eye, 
   Edit, 
   CheckCircle,
   AlertTriangle,
@@ -39,15 +39,13 @@ interface UserProfile {
 }
 
 interface UserManagementProps {
-  currentAdmin: AdminUser;
+  currentAdmin?: AdminUser;
 }
 
 const UserManagement: React.FC<UserManagementProps> = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [showPropertyModal, setShowPropertyModal] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
   const users: UserProfile[] = [
     {
@@ -275,99 +273,80 @@ const UserManagement: React.FC<UserManagementProps> = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredUsers.map((user) => {
-                const statusBadge = getStatusBadge(user.status);
-                
-                return (
-                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="px-6 py-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedUsers([...selectedUsers, user.id]);
-                          } else {
-                            setSelectedUsers(selectedUsers.filter(id => id !== user.id));
-                          }
-                        }}
-                        className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative">
-                          <img
-                            src={user.avatar}
-                            alt={user.name}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
-                            <UserCheck className="h-2 w-2 text-white" />
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+              {filteredUsers.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedUsers([...selectedUsers, user.id]);
+                        } else {
+                          setSelectedUsers(selectedUsers.filter(id => id !== user.id));
+                        }
+                      }}
+                      className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="relative">
+                        <img
+                          src={user.avatar}
+                          alt={user.name}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                          <UserCheck className="h-2 w-2 text-white" />
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">{user.role}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Joined: {new Date(user.joinedDate).toLocaleDateString()}
-                        </p>
-                        {user.subscriptionType && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {user.subscriptionType}
-                          </span>
-                        )}
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 dark:text-white">
-                        <p>Chats: {user.chatsInitiated}</p>
-                        <p>Properties: {user.propertiesListed}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Last active: {user.lastActive}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => {
-                            setSelectedProperty(user);
-                            setShowPropertyModal(true);
-                          }}
-                          className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleUserAction('edit', user.id)}
-                          className="p-1 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleUserAction('suspend', user.id)}
-                          className="p-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300"
-                        >
-                          <Ban className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleUserAction('delete', user.id)}
-                          className="p-1 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
-                        >
-                          {/* <Trash2 className="h-4 w-4" /> */}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">{user.role}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Joined: {new Date(user.joinedDate).toLocaleDateString()}
+                      </p>
+                      {user.subscriptionType && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {user.subscriptionType}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900 dark:text-white">
+                      <p>Chats: {user.chatsInitiated}</p>
+                      <p>Properties: {user.propertiesListed}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Last active: {user.lastActive}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleUserAction('edit', user.id)}
+                        className="p-1 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleUserAction('suspend', user.id)}
+                        className="p-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300"
+                      >
+                        <Ban className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
