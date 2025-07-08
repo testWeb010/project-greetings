@@ -16,17 +16,30 @@ export interface Property {
     name: string;
     phone: string;
     email: string;
-    avatar?: string;
+    avatar: string; // Made avatar required
     verified: boolean;
     responseTime?: string;
     rating?: number;
   };
-  amenities: string[];
+  deposit: number; // Added deposit
+  totalCost: number; // Added totalCost
+  location_details: {
+    address: string;
+    coordinates: { lat: number; lng: number };
+  };
+  reviews: {
+    overall: number;
+    cleanliness: number;
+    location: number;
+    valueForMoney: number;
+    count: number;
+  };
+  amenities: { icon: any; name: string; available: boolean; }[];
   description: string;
   propertyType: string;
   genderPreference: string;
-  availableFrom: string;
-  totalMembers: number;
+  availability: { available: boolean; availableFrom: string; };
+  members: number;
   currentOccupancy: number;
   rules?: string[];
   nearbyPlaces?: string[];
@@ -115,6 +128,31 @@ export interface Testimonial {
   location: string;
 }
 
+export interface FeaturedProperty {
+  id: string;
+  title: string;
+  price: number;
+  location: string;
+  totalMembers: number;
+  currentOccupancy: number;
+  image: string;
+  verified: boolean;
+  featured: boolean;
+  genderPreference: string;
+  propertyType: string;
+  owner: {
+    name: string;
+    responseTime: string;
+    rating: number;
+    verified: boolean;
+    phone?: string; // Added optional phone property
+  };
+  amenities: string[];
+  views: number;
+  availableFrom: string;
+  discount?: number;
+}
+
 export interface SearchFilters {
   location: string;
   priceRange: {
@@ -125,6 +163,7 @@ export interface SearchFilters {
   genderPreference: string;
   amenities: string[];
   availableFrom?: string;
+  bedrooms?: string; // Added bedrooms property
 }
 
 export interface PropertyFormData {
@@ -166,11 +205,23 @@ export interface PropertyFormErrors {
   totalRooms?: string;
   totalRent?: string;
   securityMoney?: string;
+  electricityIncluded?: string;
+  kitchenAvailable?: string;
+  kitchenShared?: string;
+  washroomAvailable?: string;
+  washroomShared?: string;
+  smokingAlcoholAllowed?: string;
   totalMembersAllowed?: string;
+  independentProperty?: string;
+  propertyOwner?: string;
+  askingForRoommate?: string;
+  foodServiceAvailable?: string;
   preferredGender?: string;
   description?: string;
   images?: string;
   availableFrom?: string;
+  rules?: string;
+  nearbyPlaces?: string;
 }
 
 export interface ApiEndpoints {

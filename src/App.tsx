@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import Navigation from './components/Navigation';
-import LandingPage from './components/LandingPage';
-import AllPropertiesPage from './components/AllPropertiesPage';
-import AddPropertyForm from './components/AddPropertyForm';
-import PropertyDetailPage from './components/PropertyDetailPage';
-import BlogPage from './components/BlogPage';
-import MembershipPage from './components/MembershipPage';
+import Navigation from './pages/Navigation';
+import LandingPage from './pages/LandingPage';
+import AllPropertiesPage from './components/Properties/AllPropertiesPage';
+import AddPropertyForm from './components/AddProperty/AddPropertyForm';
+import PropertyDetailPage from './pages/PropertyDetailPage';
+import BlogPage from './components/Blog/BlogPage';
+import MembershipPage from './pages/MembershipPage';
+import AdminPanel from './components/AdminPannel';
 
-type Page = 'home' | 'properties' | 'add-property' | 'property-detail' | 'blog' | 'membership' | 'chat';
+type Page = 'home' | 'properties' | 'add-property' | 'property-detail' | 'blog' | 'membership' | 'chat' | 'admin';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -26,6 +27,8 @@ function App() {
         return <BlogPage />;
       case 'membership':
         return <MembershipPage />;
+      case 'admin':
+        return <AdminPanel />;
       case 'chat':
         return <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -38,8 +41,13 @@ function App() {
     }
   };
 
+  // Show admin panel without navigation
+  if (currentPage === 'admin') {
+    return <AdminPanel />;
+  }
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
       {renderPage()}
     </div>
