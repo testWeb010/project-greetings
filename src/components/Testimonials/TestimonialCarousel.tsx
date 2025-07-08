@@ -1,134 +1,136 @@
-import React from 'react';
-import { Star, Quote, ChevronLeft, ChevronRight, CheckCircle, Building, MapPin } from 'lucide-react';
-import { Testimonial } from '../../types'; // Corrected import path
 
-interface TestimonialCarouselProps {
-  filteredTestimonials: Testimonial[];
-  currentTestimonial: number;
-  onNext: () => void;
-  onPrev: () => void;
-  onIndicatorClick: (index: number) => void;
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+
+interface TestimonialUser {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  location: string;
+  university?: string;
+  propertyType?: string;
 }
 
-const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
-  filteredTestimonials,
-  currentTestimonial,
-  onNext,
-  onPrev,
-  onIndicatorClick,
-}) => {
-  const testimonial = filteredTestimonials[currentTestimonial];
+interface Testimonial {
+  id: string;
+  user: TestimonialUser;
+  content: string;
+  rating: number;
+  date: string;
+  category: string;
+  verified: boolean;
+  helpful: number;
+  featured: boolean;
+  tags: string[];
+  propertyDetails?: {
+    name: string;
+    location: string;
+    rent: number;
+  };
+}
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center space-x-1">
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={`h-5 w-5 ${
-              i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-            }`}
-          />
-        ))}
-      </div>
-    );
+interface TestimonialCarouselProps {
+  testimonials: Testimonial[];
+}
+
+const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
-  if (!testimonial) {
-    return null; // Or a loading/empty state
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  if (!testimonials.length) {
+    return <div>No testimonials available</div>;
   }
 
+  const currentTestimonial = testimonials[currentIndex];
+
   return (
-    <div className="mb-16">
-      <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-white/50 shadow-2xl relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }}></div>
-        </div>
-
-        {/* Quote Icon */}
-        <div className="absolute top-8 right-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center">
-            <Quote className="h-8 w-8 text-blue-600" />
+    <div className="relative max-w-4xl mx-auto">
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <img
+              src={currentTestimonial.user.avatar}
+              alt={currentTestimonial.user.name}
+              className="w-16 h-16 rounded-full object-cover"
+            />
+            <div>
+              <h4 className="text-lg font-bold text-gray-900">{currentTestimonial.user.name}</h4>
+              <p className="text-blue-600 font-semibold">{currentTestimonial.user.role}</p>
+              <p className="text-gray-500 text-sm">{currentTestimonial.user.location}</p>
+            </div>
           </div>
-        </div>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={onPrev}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-blue-600 p-4 rounded-full transition-all duration-200 hover:scale-110 shadow-lg border border-blue-100"
-          aria-label="Previous testimonial"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-        <button
-          onClick={onNext}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-blue-600 p-4 rounded-full transition-all duration-200 hover:scale-110 shadow-lg border border-blue-100"
-          aria-label="Next testimonial"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
-
-        <div className="text-center max-w-5xl mx-auto relative z-10">
-          {/* Rating */}
-          <div className="mb-8">
-            {renderStars(testimonial?.rating || 5)}
-          </div>
-
-          {/* Content */}
-          <blockquote className="text-xl sm:text-2xl md:text-3xl text-gray-700 mb-10 leading-relaxed font-medium">
-            "{testimonial?.content}"
-          </blockquote>
-
-          {/* Author Info */}
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-8">
-            <div className="relative">
-              <img
-                src={testimonial?.avatar}
-                alt={testimonial?.name}
-                className="w-20 h-20 rounded-full object-cover border-4 border-blue-100 shadow-lg"
+          <div className="flex items-center space-x-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-5 w-5 ${
+                  i < currentTestimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                }`}
               />
-              <div className="absolute -bottom-2 -right-2 bg-emerald-500 rounded-full p-2">
-                <CheckCircle className="h-4 w-4 text-white" />
-              </div>
-            </div>
-            <div className="text-center sm:text-left">
-              <h4 className="text-2xl font-bold text-gray-900 mb-1">
-                {testimonial?.name}
-              </h4>
-              <p className="text-blue-600 font-semibold text-lg mb-2">
-                {testimonial?.role}
-              </p>
-              <div className="flex items-center justify-center sm:justify-start space-x-4 text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Building className="h-4 w-4" />
-                  <span className="text-sm font-medium">{testimonial?.propertyType}</span>
-                </div>
-                <span className="text-gray-300">•</span>
-                <div className="flex items-center space-x-1">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm font-medium">{testimonial?.location}</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Testimonial Indicators */}
-        <div className="flex justify-center mt-10 space-x-2">
-          {filteredTestimonials.map((_, index) => (
+        <p className="text-gray-700 text-lg leading-relaxed mb-6">
+          "{currentTestimonial.content}"
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {currentTestimonial.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {currentTestimonial.propertyDetails && (
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h5 className="font-semibold text-gray-900 mb-2">Property Details</h5>
+            <p className="text-gray-700">{currentTestimonial.propertyDetails.name}</p>
+            <p className="text-gray-600 text-sm">{currentTestimonial.propertyDetails.location}</p>
+            <p className="text-blue-600 font-semibold">₹{currentTestimonial.propertyDetails.rent}/month</p>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between mt-6">
+        <button
+          onClick={prevTestimonial}
+          className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <ChevronLeft className="h-6 w-6 text-gray-600" />
+        </button>
+
+        <div className="flex space-x-2">
+          {testimonials.map((_, index) => (
             <button
               key={index}
-              onClick={() => onIndicatorClick(index)}
-              className={`h-3 rounded-full transition-all duration-200 ${
-                index === currentTestimonial ? 'bg-blue-600 w-8' : 'bg-gray-300 w-3'
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
               }`}
-               aria-label={`Go to testimonial ${index + 1}`}
             />
           ))}
         </div>
+
+        <button
+          onClick={nextTestimonial}
+          className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <ChevronRight className="h-6 w-6 text-gray-600" />
+        </button>
       </div>
     </div>
   );

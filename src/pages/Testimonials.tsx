@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TrustIndicators from '../components/Testimonials/TrustIndicators';
 import TestimonialHeader from '../components/Testimonials/TestimonialHeader';
@@ -8,6 +7,7 @@ import VideoTestimonials from '../components/Testimonials/VideoTestimonials';
 import AchievementStats from '../components/Testimonials/AchievementStats';
 import SuccessMetrics from '../components/Testimonials/SuccessMetrics';
 import TestimonialsCTA from '../components/Testimonials/TestimonialsCTA';
+import { Home, Users, Award, TrendingUp } from 'lucide-react';
 
 interface TestimonialUser {
   id: string;
@@ -149,22 +149,22 @@ const Testimonials: React.FC = () => {
 
   const videoTestimonials = [
     {
-      id: '1',
-      user: testimonials[0].user,
-      thumbnailUrl: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg',
-      videoUrl: '#',
+      id: 1,
       title: 'How I Found My Dream PG in Bangalore',
-      duration: '2:30',
-      views: 1240
+      student: testimonials[0].user.name,
+      image: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg'
     },
     {
-      id: '2',
-      user: testimonials[1].user,
-      thumbnailUrl: 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg',
-      videoUrl: '#',
+      id: 2,
       title: 'Property Owner Success Story',
-      duration: '3:15',
-      views: 890
+      student: testimonials[1].user.name,
+      image: 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg'
+    },
+    {
+      id: 3,
+      title: 'Finding Safe Accommodation',
+      student: testimonials[2].user.name,
+      image: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg'
     }
   ];
 
@@ -181,27 +181,57 @@ const Testimonials: React.FC = () => {
     return matchesCategory && matchesRating;
   });
 
-  const trustIndicators = [
+  const achievements = [
     {
-      id: 'verified',
-      title: 'Verified Reviews',
-      value: '10,000+',
-      icon: 'Shield',
-      color: 'blue'
+      number: '50,000+',
+      label: 'Happy Students',
+      icon: Users,
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'from-blue-50 to-blue-100'
     },
     {
-      id: 'rating',
-      title: 'Average Rating',
-      value: '4.8/5',
-      icon: 'Star',
-      color: 'yellow'
+      number: '10,000+',
+      label: 'Properties Listed',
+      icon: Home,
+      color: 'from-green-500 to-green-600',
+      bgColor: 'from-green-50 to-green-100'
     },
     {
-      id: 'satisfaction',
-      title: 'Satisfaction Rate',
-      value: '96%',
-      icon: 'ThumbsUp',
-      color: 'green'
+      number: '95%',
+      label: 'Success Rate',
+      icon: Award,
+      color: 'from-yellow-500 to-yellow-600',
+      bgColor: 'from-yellow-50 to-yellow-100'
+    },
+    {
+      number: '24/7',
+      label: 'Support Available',
+      icon: TrendingUp,
+      color: 'from-purple-500 to-purple-600',
+      bgColor: 'from-purple-50 to-purple-100'
+    }
+  ];
+
+  const metrics = [
+    {
+      metric: '4.8/5',
+      label: 'Average Rating',
+      icon: Award
+    },
+    {
+      metric: '2.5 Days',
+      label: 'Average Finding Time',
+      icon: TrendingUp
+    },
+    {
+      metric: '96%',
+      label: 'Customer Satisfaction',
+      icon: Users
+    },
+    {
+      metric: '15 Min',
+      label: 'Average Response Time',
+      icon: Home
     }
   ];
 
@@ -222,8 +252,8 @@ const Testimonials: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TestimonialFilters
             categories={categories}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
+            activeCategory={activeFilter}
+            setActiveCategory={setActiveFilter}
             selectedRating={selectedRating}
             setSelectedRating={setSelectedRating}
           />
@@ -247,14 +277,14 @@ const Testimonials: React.FC = () => {
       {/* Achievement Stats */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AchievementStats />
+          <AchievementStats achievements={achievements} />
         </div>
       </section>
 
       {/* Success Metrics */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SuccessMetrics />
+          <SuccessMetrics metrics={metrics} />
         </div>
       </section>
 

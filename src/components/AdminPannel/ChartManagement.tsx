@@ -62,8 +62,6 @@ const ChatManagement: React.FC<ChatManagementProps> = ({ currentAdmin }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedChats, setSelectedChats] = useState<string[]>([]);
-  const [showChatModal, setShowChatModal] = useState(false);
-  const [selectedChat, setSelectedChat] = useState<ChatSession | null>(null);
 
   const chatSessions: ChatSession[] = [
     {

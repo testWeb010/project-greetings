@@ -1,8 +1,17 @@
+
 import React, { useState } from 'react';
-import { Search, Filter, Grid, List } from 'lucide-react'; // Keep necessary icons for header
+import { Search, Filter, Grid, List } from 'lucide-react';
 import PropertyFilterSidebar from './PropertyFilterSidebar';
 import PropertyListContainer from './PropertyListContainer';
-import { SearchFilters } from '../../types'; // Import SearchFilters from types/index.ts
+
+interface LocalSearchFilters {
+  propertyType: string;
+  genderPreference: string;
+  bedrooms: string;
+  priceRange: { min: number; max: number };
+  location: string;
+  amenities: string[];
+}
 
 interface AllPropertiesPageProps {
   onPropertyClick: () => void;
@@ -12,22 +21,22 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(true);
-  const [filters, setFilters] = useState<SearchFilters>({
+  const [filters, setFilters] = useState<LocalSearchFilters>({
     propertyType: '',
-    genderPreference: '', // Use genderPreference to match SearchFilters
+    genderPreference: '',
     bedrooms: '',
     priceRange: { min: 0, max: 50000 },
     location: '',
     amenities: []
   });
 
-  // Filter options - these might ideally come from an API or shared constants
+  // Filter options
   const propertyTypes = ['Apartment', 'Single Room', 'PG', 'House', 'Villa'];
   const genderOptions = ['Male', 'Female', 'Family', 'No Preference'];
   const bedroomOptions = ['1', '2', '3', '4', '5+'];
   const amenityOptions = ['Verified', 'Smoking & Drinking', 'Independent', 'Electricity', 'AC', 'WiFi', 'Parking'];
 
-  const handleFilterChange = (key: keyof SearchFilters, value: any) => {
+  const handleFilterChange = (key: keyof LocalSearchFilters, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -43,22 +52,13 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
   const clearFilters = () => {
     setFilters({
       propertyType: '',
-      genderPreference: '', // Use genderPreference
+      genderPreference: '',
       bedrooms: '',
       priceRange: { min: 0, max: 50000 },
       location: '',
       amenities: []
     });
   };
-
-  // Remove formatPrice as it's not needed in this component anymore
-  // const formatPrice = (price: number) => {
-  //   return new Intl.NumberFormat('en-IN', {
-  //     style: 'currency',
-  //     currency: 'INR',
-  //     minimumFractionDigits: 0,
-  //   }).format(price);
-  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -105,9 +105,7 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
                 </button>
               </div>
 
-              {/* Property count display - this should ideally come from PropertyListContainer */}
               <span className="text-sm text-gray-600">
-                 {/* You might need a mechanism to get the actual count from PropertyListContainer */}
                 Properties Found
               </span>
             </div>
@@ -132,17 +130,20 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
 
           {/* Properties Grid/List Container */}
           <PropertyListContainer
-            filters={filters}
-            searchQuery={searchQuery}
+            properties={[]}
             viewMode={viewMode}
+            currentPage={1}
+            totalPages={1}
+            onViewModeChange={setViewMode}
+            onPageChange={() => {}}
             onPropertyClick={onPropertyClick}
+            searchQuery={searchQuery}
+            filters={filters}
           />
         </div>
       </div>
     </div>
   );
 };
-
-// Removed Property Card and Property List Item components as they are now in PropertyListContainer
 
 export default AllPropertiesPage;

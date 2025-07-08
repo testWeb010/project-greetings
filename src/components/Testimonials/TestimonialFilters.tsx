@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface Category {
@@ -10,12 +11,16 @@ interface TestimonialFiltersProps {
   categories: Category[];
   activeCategory: string;
   setActiveCategory: (category: string) => void;
+  selectedRating: number;
+  setSelectedRating: (rating: number) => void;
 }
 
 const TestimonialFilters: React.FC<TestimonialFiltersProps> = ({
   categories,
   activeCategory,
   setActiveCategory,
+  selectedRating,
+  setSelectedRating,
 }) => {
   return (
     <div className="flex justify-center mb-12">
@@ -26,7 +31,6 @@ const TestimonialFilters: React.FC<TestimonialFiltersProps> = ({
               key={category.key}
               onClick={() => {
                 setActiveCategory(category.key);
-                // setCurrentTestimonial(0); // This state is in the parent, handle resetting in parent
               }}
               className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
                 activeCategory === category.key
@@ -46,6 +50,24 @@ const TestimonialFilters: React.FC<TestimonialFiltersProps> = ({
               </div>
             </button>
           ))}
+        </div>
+        <div className="mt-4 flex justify-center">
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-600">Rating:</span>
+            {[0, 1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                onClick={() => setSelectedRating(rating)}
+                className={`px-3 py-1 rounded-lg text-sm ${
+                  selectedRating === rating
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {rating === 0 ? 'All' : `${rating}+`}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

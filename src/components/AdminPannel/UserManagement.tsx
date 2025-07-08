@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Search, 
@@ -100,15 +99,6 @@ const UserManagement: React.FC<UserManagementProps> = () => {
   const handleBulkAction = (action: string) => {
     console.log(`Bulk ${action}:`, selectedUsers);
     // Implement bulk actions
-  };
-
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      active: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      inactive: { color: 'bg-gray-100 text-gray-800', icon: Clock },
-      suspended: { color: 'bg-red-100 text-red-800', icon: AlertTriangle }
-    };
-    return badges[status as keyof typeof badges] || badges.active;
   };
 
   const filteredUsers = users.filter(user => {
