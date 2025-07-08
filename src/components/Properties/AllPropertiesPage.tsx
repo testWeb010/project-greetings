@@ -11,6 +11,7 @@ interface LocalSearchFilters {
   priceRange: { min: number; max: number };
   location: string;
   amenities: string[];
+  availableFrom?: string;
 }
 
 interface AllPropertiesPageProps {
@@ -27,7 +28,8 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
     bedrooms: '',
     priceRange: { min: 0, max: 50000 },
     location: '',
-    amenities: []
+    amenities: [],
+    availableFrom: ''
   });
 
   // Filter options
@@ -56,7 +58,8 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
       bedrooms: '',
       priceRange: { min: 0, max: 50000 },
       location: '',
-      amenities: []
+      amenities: [],
+      availableFrom: ''
     });
   };
 
