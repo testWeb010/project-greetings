@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Search, 
@@ -8,8 +9,7 @@ import {
   Edit,
   Trash2,
   Plus,
-  Settings,
-  User
+  Settings
 } from 'lucide-react';
 
 interface AdminUser {

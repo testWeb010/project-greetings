@@ -4,6 +4,7 @@ import React from 'react';
 interface PropertyFilterTabsProps {
   activeFilter: string;
   onFilterChange: (filter: string) => void;
+  propertiesCount?: { [key: string]: number };
 }
 
 const PropertyFilterTabs: React.FC<PropertyFilterTabsProps> = ({ activeFilter, onFilterChange }) => {

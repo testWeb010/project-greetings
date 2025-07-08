@@ -1,5 +1,21 @@
+
 import React from 'react';
-import { SearchFilters } from '../../types';
+
+interface SearchFilters {
+  location: string;
+  priceRange: {
+    min: number;
+    max: number;
+  };
+  propertyType: string;
+  genderPreference: string;
+  amenities: string[];
+  availableFrom?: string;
+  bedrooms?: string;
+  gender?: string;
+  minPrice?: string;
+  maxPrice?: string;
+}
 
 interface PropertyFilterSidebarProps {
   showFilters: boolean;
@@ -61,8 +77,8 @@ const PropertyFilterSidebar: React.FC<PropertyFilterSidebarProps> = ({
       <div>
         <label className="block text-sm font-medium text-gray-700">Gender Preference</label>
         <select
-          value={filters.gender || ''}
-          onChange={(e) => handleFilterChange('gender', e.target.value)}
+          value={filters.genderPreference || ''}
+          onChange={(e) => handleFilterChange('genderPreference', e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
         >
           <option value="">Any</option>
@@ -114,15 +130,15 @@ const PropertyFilterSidebar: React.FC<PropertyFilterSidebarProps> = ({
         <div className="flex space-x-2">
           <input
             type="number"
-            value={filters.minPrice || ''}
-            onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+            value={filters.priceRange?.min || ''}
+            onChange={(e) => handleFilterChange('priceRange', { ...filters.priceRange, min: Number(e.target.value) })}
             className="mt-1 block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             placeholder="Min"
           />
           <input
             type="number"
-            value={filters.maxPrice || ''}
-            onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+            value={filters.priceRange?.max || ''}
+            onChange={(e) => handleFilterChange('priceRange', { ...filters.priceRange, max: Number(e.target.value) })}
             className="mt-1 block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             placeholder="Max"
           />

@@ -3,15 +3,10 @@ import {
   Search, 
   Plus, 
   Users, 
-  Eye, 
   Edit, 
   CheckCircle,
-  AlertTriangle,
   Clock,
-  TrendingUp,
-  UserCheck,
-  Ban,
-  Mail
+  Ban
 } from 'lucide-react';
 
 interface AdminUser {
@@ -28,7 +23,7 @@ interface EmployeeManagementProps {
   currentAdmin: AdminUser;
 }
 
-const EmployeeManagement: React.FC<EmployeeManagementProps> = ({ currentAdmin }) => {
+const EmployeeManagement: React.FC<EmployeeManagementProps> = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);

@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Bed, Bath, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { FeaturedProperty } from '../../types';
 import PropertyCard from './PropertyCard'; 
 

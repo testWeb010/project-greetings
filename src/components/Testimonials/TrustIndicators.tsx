@@ -1,7 +1,20 @@
+
 import React from 'react';
 import { Shield, Phone } from 'lucide-react';
 
-const TrustIndicators: React.FC = () => {
+interface TrustIndicator {
+  id: string;
+  title: string;
+  value: string;
+  icon: React.ComponentType<any>;
+  color: string;
+}
+
+interface TrustIndicatorsProps {
+  indicators?: TrustIndicator[];
+}
+
+const TrustIndicators: React.FC<TrustIndicatorsProps> = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">

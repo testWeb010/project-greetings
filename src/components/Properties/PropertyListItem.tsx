@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { MapPin, Heart, MessageCircle, Phone, Star } from 'lucide-react';
+import { MapPin, MessageCircle, Phone, Star } from 'lucide-react';
 import { Property } from '../../types';
 
 interface PropertyListItemProps {

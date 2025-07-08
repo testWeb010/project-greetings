@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Heart, MessageCircle, Phone, Star } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import { Property } from '../../types';
 
 interface PropertyCardProps {
@@ -25,39 +25,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
     }).format(price);
   };
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center">
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={`h-3 w-3 ${
-              i < Math.floor(rating) 
-                ? 'text-yellow-400 fill-current' 
-                : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className="ml-1 text-xs text-gray-600 font-medium">({rating})</span>
-      </div>
-    );
-  };
-
   return (
-    
     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onClick={onClick}>
-      
-      
       <img
         src={property.image}
         alt={property.title}
         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
       />
       
-
-      
       <div className="p-6">
-        
         <div className="flex items-center justify-between mb-3">
           <div>
             <span className="text-2xl font-bold text-gray-900">
@@ -67,18 +43,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
           </div>
         </div>
 
-        
         <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
           {property.title}
         </h3>
 
-        
         <div className="flex items-center text-gray-600 mb-4">
           <MapPin className="h-4 w-4 mr-2 text-blue-500" />
           <span className="text-sm">{property.location}</span>
         </div>
 
-        
         <div className="flex flex-wrap gap-1 mb-4">
           {amenityIcons.slice(0, 4).map((amenity) => (
             <span
@@ -95,8 +68,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
             </span>
           )}
         </div>
-
-        
       </div>
     </div>
   );

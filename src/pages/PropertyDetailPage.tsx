@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ArrowLeft, MapPin, Heart, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, MapPin, Heart, Share2 } from 'lucide-react';
 import PricingCard from '../components/PropertyDetailPageComponents/PricingCard';
 import { Property } from '../types';
 
@@ -9,38 +9,69 @@ const PropertyDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isFavorited, setIsFavorited] = useState(false);
 
-  // Mock property data
+  // Mock property data - fix amenities type
   const property: Property = {
     id: id || '1',
     title: 'Modern PG in Koramangala',
     price: 12000,
     location: 'Koramangala, Bangalore',
+    type: 'rent',
     bedrooms: 1,
     bathrooms: 1,
     area: 450,
-    description: 'A modern and well-maintained PG in the heart of Koramangala, perfect for students and young professionals.',
-    amenities: ['WiFi', 'AC', 'Attached Bathroom', 'Food Service', 'Laundry', 'Security'],
+    image: 'https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg',
     images: [
       'https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg',
       'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg',
       'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg'
     ],
-    verified: true,
     featured: true,
-    submittedBy: 'Rajesh Kumar',
-    submittedDate: '2024-01-15',
-    views: 2345,
-    contacted: 456,
-    status: 'active'
+    verified: true,
+    owner: {
+      id: '1',
+      name: 'Rajesh Kumar',
+      phone: '+91 9876543210',
+      email: 'rajesh@example.com',
+      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
+      verified: true,
+      responseTime: '5 mins',
+      rating: 4.8
+    },
+    deposit: 24000,
+    totalCost: 36000,
+    location_details: {
+      address: 'Koramangala 5th Block, Bangalore',
+      coordinates: { lat: 12.9352, lng: 77.6245 }
+    },
+    reviews: {
+      overall: 4.8,
+      cleanliness: 4.9,
+      location: 4.7,
+      valueForMoney: 4.6,
+      count: 23
+    },
+    amenities: [
+      { icon: '⚡', name: 'Electricity', available: true },
+      { icon: '🍳', name: 'Kitchen', available: true },
+      { icon: '🚿', name: 'Washroom', available: true },
+      { icon: '❄️', name: 'AC', available: true },
+      { icon: '💧', name: 'RO Water', available: true },
+      { icon: '🍽️', name: 'Food Service', available: true }
+    ],
+    description: 'A modern and well-maintained PG in the heart of Koramangala, perfect for students and young professionals.',
+    propertyType: 'PG',
+    genderPreference: 'Male Only',
+    availability: { available: true, availableFrom: '2024-02-01' },
+    members: 4,
+    currentOccupancy: 2,
+    rules: ['No smoking', 'No drinking', 'No loud music after 10 PM'],
+    nearbyPlaces: ['Koramangala Metro Station', 'Forum Mall', 'Cafe Coffee Day'],
+    createdAt: '2024-01-15T00:00:00Z',
+    isActive: true
   };
 
   const handleBackClick = () => {
     window.history.back();
-  };
-
-  const handleGetContactDetailsClick = () => {
-    console.log('Get contact details clicked');
-    alert('Contact details: +91 9876543210');
   };
 
   return (
@@ -140,7 +171,7 @@ const PropertyDetailPage: React.FC = () => {
                       key={index}
                       className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
                     >
-                      {amenity}
+                      {amenity.name}
                     </span>
                   ))}
                 </div>
@@ -153,7 +184,7 @@ const PropertyDetailPage: React.FC = () => {
             <PricingCard 
               price={property.price}
               currency="INR"
-              rentIncludes={property.amenities}
+              rentIncludes={property.amenities.map(a => a.name)}
             />
           </div>
         </div>
