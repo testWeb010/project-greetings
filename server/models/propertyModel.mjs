@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const propertySchema = new mongoose.Schema({
@@ -48,6 +49,25 @@ const propertySchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  featured: {
+    type: Boolean,
+    default: false,
+  },
+  views: {
+    type: Number,
+    default: 0,
+  },
+  contactCount: {
+    type: Number,
+    default: 0,
+  },
+  rejectionReason: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -65,6 +85,8 @@ propertySchema.index({ propertyType: 1 });
 propertySchema.index({ totalRent: 1 });
 propertySchema.index({ preferedGender: 1 });
 propertySchema.index({ isActive: 1 });
+propertySchema.index({ isVerified: 1 });
+propertySchema.index({ featured: 1 });
 
 // Add a compound index for common filter combinations
 propertySchema.index({ 
@@ -72,6 +94,13 @@ propertySchema.index({
   propertyType: 1, 
   totalRent: 1, 
   isActive: 1 
+});
+
+// Add text index for search functionality
+propertySchema.index({
+  title: 'text',
+  description: 'text',
+  location: 'text'
 });
 
 // Add instance method to get property details
@@ -86,7 +115,23 @@ propertySchema.methods.getPublicDetails = function() {
     preferedGender: this.preferedGender,
     images: this.images,
     amenities: this.amenities,
+    views: this.views,
+    featured: this.featured,
+    isVerified: this.isVerified,
+    createdAt: this.createdAt
   };
+};
+
+// Add method to increment views
+propertySchema.methods.incrementViews = function() {
+  this.views += 1;
+  return this.save();
+};
+
+// Add method to increment contact count
+propertySchema.methods.incrementContactCount = function() {
+  this.contactCount += 1;
+  return this.save();
 };
 
 const Property = mongoose.model('Property', propertySchema);

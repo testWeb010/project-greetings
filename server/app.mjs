@@ -1,3 +1,4 @@
+
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -7,6 +8,7 @@ import { connectToDatabase } from "./db/conn.mjs";
 import authRouter from "./routes/authRouter.mjs";
 import userRouter from "./routes/userRouter.mjs";
 import postAdRouter from "./routes/postAdRouter.mjs";
+import propertyRouter from "./routes/propertyRouter.mjs";
 import requireAuth from "./middlewares/requireAuth.mjs";
 import cashfree from "./routes/PaymentController.mjs";
 import membershipRouter from "./routes/membershipRouter.mjs";
@@ -111,6 +113,7 @@ app.use("/api/admin", requireAuth, AdminRouter);
 app.use("/api/coupon", couponRouter);
 app.use("/api/user", requireAuth, userRouter);
 app.use("/api/post", postAdRouter);
+app.use("/api/properties", propertyRouter);
 app.use("/api/payment", requireAuth, cashfree);
 app.use("/api/membership", membershipRouter);
 
