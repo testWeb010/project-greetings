@@ -1,26 +1,22 @@
 
 import React from 'react';
-import Navigation from '../../pages/Navigation';
-import Footer from '../../pages/Footer';
+import Header from '../shared/navigation/Header';
+import Footer from '../shared/footer/Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
-  currentPage?: string;
-  showNavigation?: boolean;
+  showHeader?: boolean;
   showFooter?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  currentPage = 'home',
-  showNavigation = true,
+  showHeader = true,
   showFooter = true
 }) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {showNavigation && (
-        <Navigation currentPage={currentPage} onPageChange={() => {}} />
-      )}
+      {showHeader && <Header />}
       <main className="flex-1">
         {children}
       </main>

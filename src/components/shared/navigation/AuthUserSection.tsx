@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { LogIn, UserPlus, MessageCircle, Heart, User, ChevronDown } from 'lucide-react';
 
 interface AuthUserSectionProps {
-  user: any; // Replace 'any' with actual user type
-  chatCredits: number; // Replace with actual type if different
+  user: any;
+  chatCredits: number;
   onPageChange: (page: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat') => void;
   handleAuthClick: (mode: 'signin' | 'signup') => void;
 }
@@ -17,34 +18,23 @@ const AuthUserSection: React.FC<AuthUserSectionProps> = ({
   return (
     <div className="flex items-center space-x-4">
       {user ? (
-        // Logged in user
         <div className="flex items-center space-x-4">
-          {/* Chat Credits */}
-          {/* TODO: Fetch chat credits dynamically from user data or an API */}
           <div className="flex items-center space-x-2 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700">
             <MessageCircle className="h-4 w-4" />
             <span className="text-sm font-medium">{chatCredits} chats left</span>
           </div>
 
-          {/* Favorites */}
-          {/* TODO: Link to favorites page and potentially fetch count */}
           <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors">
             <Heart className="h-5 w-5" />
           </button>
 
-          {/* Messages */}
-          {/* TODO: Link to messages/chat page and potentially fetch unread count */}
           <button
             onClick={() => onPageChange('chat')}
             className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors relative"
           >
             <MessageCircle className="h-5 w-5" />
-            {/* TODO: Dynamically show notification dot if unread messages exist */}
-            {/* <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span> */}
           </button>
 
-          {/* User Menu */}
-          {/* TODO: Implement actual user dropdown menu */}
           <div className="flex items-center space-x-2 cursor-pointer group">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <User className="h-4 w-4 text-white" />
@@ -53,10 +43,7 @@ const AuthUserSection: React.FC<AuthUserSectionProps> = ({
           </div>
         </div>
       ) : (
-        // Logged out state
         <div className="flex items-center space-x-4">
-          {/* Free Chat Credits Badge */}
-          {/* TODO: Fetch free chat credits info from an API if applicable */}
           <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/30 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700">
             <MessageCircle className="h-4 w-4" />
             <span className="text-sm font-medium">6 Free Chats</span>

@@ -1,16 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import AuthModal from './AuthModel';
-import TopBar from '../components/Navigation/TopBar';
-import MainNavbar from '../components/Navigation/MainNavbar';
+import { useNavigate, useLocation } from 'react-router-dom';
+import AuthModal from '../../../pages/AuthModel';
+import TopBar from './TopBar';
+import MainNavbar from './MainNavbar';
 import { Home, UserPlus, Search, MessageCircle } from 'lucide-react';
 
-interface NavigationProps {
-  currentPage: string;
-  onPageChange: (page: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat') => void;
-}
-
-const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) => {
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServicesDropdown, setShowServicesDropdown] = useState(false);
@@ -36,6 +34,29 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  const getCurrentPage = () => {
+    const path = location.pathname;
+    if (path === '/') return 'home';
+    if (path === '/properties') return 'properties';
+    if (path === '/add-property') return 'add-property';
+    if (path === '/blog') return 'blog';
+    if (path === '/membership') return 'membership';
+    if (path === '/chat') return 'chat';
+    return 'home';
+  };
+
+  const handlePageChange = (page: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat') => {
+    const routes = {
+      home: '/',
+      properties: '/properties',
+      'add-property': '/add-property',
+      blog: '/blog',
+      membership: '/membership',
+      chat: '/chat'
+    };
+    navigate(routes[page]);
+  };
 
   const navItems = [
     { name: 'Home', key: 'home' as const },
@@ -68,8 +89,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
         setIsOpen={setIsOpen}
         isDarkMode={isDarkMode}
         setIsDarkMode={setIsDarkMode}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
+        currentPage={getCurrentPage()}
+        onPageChange={handlePageChange}
         handleAuthClick={handleAuthClick}
         user={user}
         chatCredits={chatCredits}
@@ -88,4 +109,4 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
   );
 };
 
-export default Navigation;
+export default Header;

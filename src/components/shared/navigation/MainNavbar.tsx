@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Menu, X, Home } from 'lucide-react';
 import DesktopNavItems from './DesktopNavItems';
@@ -14,8 +15,8 @@ interface MainNavbarProps {
   currentPage: string;
   onPageChange: (page: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat') => void;
   handleAuthClick: (mode: 'signin' | 'signup') => void;
-  user: any; // Replace 'any' with actual user type
-  chatCredits: number; // Replace with actual type
+  user: any;
+  chatCredits: number;
   navItems: { name: string; key?: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat'; dropdown?: { name: string; icon: any }[]; }[];
   showServicesDropdown: boolean;
   setShowServicesDropdown: (show: boolean) => void;
@@ -74,19 +75,17 @@ const MainNavbar: React.FC<MainNavbarProps> = ({
 
           {/* Desktop Auth/User Section */}
           <div className="hidden lg:flex items-center space-x-4">
-             {/* Dark Mode Toggle */}
             <DarkModeToggle isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             <AuthUserSection
-               user={user}
-               chatCredits={chatCredits}
-               onPageChange={onPageChange}
-               handleAuthClick={handleAuthClick}
+              user={user}
+              chatCredits={chatCredits}
+              onPageChange={onPageChange}
+              handleAuthClick={handleAuthClick}
             />
           </div>
 
           {/* Mobile menu button */}
           <div className="lg:hidden flex items-center space-x-2">
-             {/* Dark Mode Toggle for Mobile */}
             <DarkModeToggle isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             <button
               onClick={() => setIsOpen(!isOpen)}             

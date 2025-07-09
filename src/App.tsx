@@ -29,43 +29,43 @@ function App() {
           
           {/* Public routes - with layout */}
           <Route path="/" element={
-            <Layout currentPage="home">
+            <Layout>
               <LandingPage />
             </Layout>
           } />
           
           <Route path="/properties" element={
-            <Layout currentPage="properties">
+            <Layout>
               <AllPropertiesPage onPropertyClick={() => {}} />
             </Layout>
           } />
           
           <Route path="/add-property" element={
-            <Layout currentPage="add-property">
+            <Layout>
               <AddPropertyForm />
             </Layout>
           } />
           
           <Route path="/property/:id" element={
-            <Layout currentPage="property">
+            <Layout>
               <PropertyDetailPage />
             </Layout>
           } />
           
           <Route path="/blog" element={
-            <Layout currentPage="blog">
+            <Layout>
               <BlogPage />
             </Layout>
           } />
           
           <Route path="/membership" element={
-            <Layout currentPage="membership">
+            <Layout>
               <MembershipPage />
             </Layout>
           } />
           
           <Route path="/chat" element={
-            <Layout currentPage="chat">
+            <Layout>
               <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">Chat Feature Coming Soon</h2>

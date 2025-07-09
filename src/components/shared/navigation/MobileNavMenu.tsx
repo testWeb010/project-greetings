@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MessageCircle, LogIn, UserPlus } from 'lucide-react';
 
@@ -12,7 +13,7 @@ interface MobileNavMenuProps {
   currentPage: string;
   onPageChange: (page: 'home' | 'properties' | 'add-property' | 'blog' | 'membership' | 'chat') => void;
   handleAuthClick: (mode: 'signin' | 'signup') => void;
-  setIsOpen: (isOpen: boolean) => void; // To close the menu after a click
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
@@ -27,7 +28,7 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
     if (item.key) {
       onPageChange(item.key);
     }
-    setIsOpen(false); // Close menu on item click
+    setIsOpen(false);
   };
 
   return (
@@ -44,7 +45,6 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
             {item.dropdown && (
               <div className="ml-4 space-y-1">
                 {item.dropdown.map((dropdownItem) => (
-                  // TODO: Implement actual links/actions for mobile dropdown items
                   <a
                     key={dropdownItem.name}
                     href="#"
@@ -60,13 +60,11 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
         ))}
 
         <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700 mt-4">
-          {/* Free Chat Credits Badge - TODO: Fetch from API/user data */}
           <div className="flex items-center justify-center space-x-2 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/30 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg border border-green-200 dark:border-green-700 mx-3">
             <MessageCircle className="h-5 w-5" />
             <span className="font-medium">6 Free Chats Available</span>
           </div>
 
-          {/* List Property Button */}
           <button
             onClick={() => {
               onPageChange('add-property');
@@ -77,7 +75,6 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
             <span>+ List Property</span>
           </button>
 
-          {/* Auth Buttons */}
           <button
             onClick={() => {
               handleAuthClick('signin');
