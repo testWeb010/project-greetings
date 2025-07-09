@@ -1,6 +1,4 @@
-
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import PropertyCard from './PropertyCard';
 
 const PropertyCarousel: React.FC = () => {

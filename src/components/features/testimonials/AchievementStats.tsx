@@ -1,23 +1,35 @@
 
 import React from 'react';
 
+interface Achievement {
+  number: string;
+  label: string;
+  icon: React.ElementType;
+  color: string;
+  bgColor?: string;
+}
+
 interface AchievementStatsProps {
   title?: string;
   value?: string;
   description?: string;
+  achievements?: Achievement[];
 }
 
 const AchievementStats: React.FC<AchievementStatsProps> = ({ 
   title = "Success Stories", 
   value = "50,000+", 
-  description = "Students have found their perfect home through our platform" 
+  description = "Students have found their perfect home through our platform",
+  achievements: propAchievements
 }) => {
-  const stats = [
+  const defaultStats = [
     { number: '50K+', label: 'Happy Students', color: 'from-blue-600 to-blue-700' },
     { number: '10K+', label: 'Properties Listed', color: 'from-purple-600 to-purple-700' },
     { number: '25+', label: 'Cities Covered', color: 'from-green-600 to-green-700' },
     { number: '4.8/5', label: 'Customer Rating', color: 'from-orange-600 to-orange-700' }
   ];
+
+  const stats = propAchievements || defaultStats;
 
   return (
     <div className="text-center mb-16">

@@ -2,38 +2,99 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 
-const TestimonialCarousel: React.FC = () => {
+interface TestimonialUser {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  location: string;
+  university?: string;
+  propertyType?: string;
+}
+
+interface Testimonial {
+  id: string;
+  user: TestimonialUser;
+  content: string;
+  rating: number;
+  date: string;
+  category: string;
+  verified: boolean;
+  helpful: number;
+  featured: boolean;
+  tags: string[];
+  propertyDetails?: {
+    name: string;
+    location: string;
+    rent: number;
+  };
+}
+
+interface TestimonialCarouselProps {
+  testimonials?: Testimonial[];
+}
+
+const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials: propTestimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const testimonials = [
+  const defaultTestimonials = [
     {
-      id: 1,
-      name: 'Priya Sharma',
-      role: 'Engineering Student',
-      location: 'Bangalore',
+      id: '1',
+      user: {
+        id: '1',
+        name: 'Priya Sharma',
+        role: 'Engineering Student',
+        avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
+        location: 'Bangalore'
+      },
+      content: 'Finding my PG through HomeDaze was incredibly easy. The verification process gave me confidence, and I found the perfect place within a week!',
       rating: 5,
-      comment: 'Finding my PG through HomeDaze was incredibly easy. The verification process gave me confidence, and I found the perfect place within a week!',
-      avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg'
+      date: '2024-01-15',
+      category: 'student',
+      verified: true,
+      helpful: 24,
+      featured: true,
+      tags: ['Safe', 'Quick Process', 'Verified Properties']
     },
     {
-      id: 2,
-      name: 'Rahul Gupta',
-      role: 'MBA Student',
-      location: 'Delhi',
+      id: '2',
+      user: {
+        id: '2',
+        name: 'Rahul Gupta',
+        role: 'MBA Student',
+        avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
+        location: 'Delhi'
+      },
+      content: 'Zero brokerage and direct communication with owners made the whole process transparent. Highly recommend HomeDaze to all students!',
       rating: 5,
-      comment: 'Zero brokerage and direct communication with owners made the whole process transparent. Highly recommend HomeDaze to all students!',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
+      date: '2024-01-12',
+      category: 'student',
+      verified: true,
+      helpful: 18,
+      featured: true,
+      tags: ['No Brokerage', 'Transparent', 'Recommended']
     },
     {
-      id: 3,
-      name: 'Sneha Patel',
-      role: 'Medical Student',
-      location: 'Mumbai',
+      id: '3',
+      user: {
+        id: '3',
+        name: 'Sneha Patel',
+        role: 'Medical Student',
+        avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg',
+        location: 'Mumbai'
+      },
+      content: 'The customer support was exceptional. They helped me throughout the process and ensured I found a safe and comfortable place to stay.',
       rating: 5,
-      comment: 'The customer support was exceptional. They helped me throughout the process and ensured I found a safe and comfortable place to stay.',
-      avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg'
+      date: '2024-01-10',
+      category: 'student',
+      verified: true,
+      helpful: 15,
+      featured: true,
+      tags: ['Great Support', 'Safe', 'Comfortable']
     }
   ];
+
+  const testimonials = propTestimonials || defaultTestimonials;
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -50,7 +111,7 @@ const TestimonialCarousel: React.FC = () => {
         
         <div className="text-center">
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed italic">
-            "{testimonials[currentIndex].comment}"
+            "{testimonials[currentIndex].content}"
           </p>
           
           <div className="flex justify-center mb-4">
@@ -61,19 +122,19 @@ const TestimonialCarousel: React.FC = () => {
 
           <div className="flex items-center justify-center space-x-4">
             <img
-              src={testimonials[currentIndex].avatar}
-              alt={testimonials[currentIndex].name}
+              src={testimonials[currentIndex].user.avatar}
+              alt={testimonials[currentIndex].user.name}
               className="w-16 h-16 rounded-full object-cover"
             />
             <div className="text-left">
               <h4 className="font-semibold text-gray-900 dark:text-white">
-                {testimonials[currentIndex].name}
+                {testimonials[currentIndex].user.name}
               </h4>
               <p className="text-gray-600 dark:text-gray-400">
-                {testimonials[currentIndex].role}
+                {testimonials[currentIndex].user.role}
               </p>
               <p className="text-sm text-blue-600 dark:text-blue-400">
-                {testimonials[currentIndex].location}
+                {testimonials[currentIndex].user.location}
               </p>
             </div>
           </div>
