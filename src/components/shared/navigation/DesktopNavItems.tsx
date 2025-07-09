@@ -29,19 +29,19 @@ const DesktopNavItems: React.FC<DesktopNavItemsProps> = ({
         item.dropdown ? (
           <div key={item.name} className="relative group">
             <button 
-              className={`py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center space-x-2 ${currentPage === item.key ? 'text-blue-600' : ''}`}
+              className={`py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors flex items-center space-x-2 ${currentPage === item.key ? 'text-blue-600 dark:text-blue-400' : ''}`}
               onClick={() => setShowServicesDropdown(!showServicesDropdown)}
             >
               <span>{item.name}</span>
               <ChevronDown className="h-4 w-4" />
             </button>
             {showServicesDropdown && (
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+              <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-700">
                 {item.dropdown.map((dropdownItem) => (
                   <a
                     key={dropdownItem.name}
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     {dropdownItem.name}
                   </a>
@@ -57,7 +57,7 @@ const DesktopNavItems: React.FC<DesktopNavItemsProps> = ({
                 onPageChange(item.key);
               }
             }}
-            className={`py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors ${currentPage === item.key ? 'text-blue-600' : ''}`}
+            className={`py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors ${currentPage === item.key ? 'text-blue-600 dark:text-blue-400' : ''}`}
           >
             {item.name}
           </button>
