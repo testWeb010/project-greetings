@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Grid, List } from 'lucide-react';
 import { useProperties, usePropertyFilters, useUniqueCities } from '../../hooks/useProperties';
 import PropertyFilterSidebar from './PropertyFilterSidebar';
 import PropertyListContainer from './PropertyListContainer';
 import LoadingSpinner from '../LoadingSpinner';
-import { PropertySearchParams } from '../../services/propertyService';
 
 interface LocalSearchFilters {
   propertyType: string;
@@ -44,8 +44,7 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
   });
 
   const propertyFilters = usePropertyFilters();
-  const { data: cities } = useUniqueCities();
-
+  
   // Filter options
   const propertyTypes = ['Apartment', 'Single Room', 'PG', 'House', 'Villa'];
   const genderOptions = ['Male', 'Female', 'Family', 'No Preference'];

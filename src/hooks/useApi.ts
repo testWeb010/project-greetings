@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ApiError, isApiError } from '../services/api';
+import { isApiError } from '../services/api';
 
 // Generic API hook state
 export interface ApiState<T> {
