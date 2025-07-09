@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Grid, List } from 'lucide-react';
-import { useProperties, usePropertyFilters, useUniqueCities } from '../../hooks/useProperties';
+import { useProperties, usePropertyFilters } from '../../hooks/useProperties';
 import PropertyFilterSidebar from './PropertyFilterSidebar';
 import PropertyListContainer from './PropertyListContainer';
 import LoadingSpinner from '../LoadingSpinner';
