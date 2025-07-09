@@ -16,8 +16,6 @@ interface PropertyListContainerProps {
   onPropertyClick: (property: Property) => void;
   searchQuery: string;
   filters: any;
-  loading: boolean;
-  error: string | null;
 }
 
 const PropertyListContainer: React.FC<PropertyListContainerProps> = ({
@@ -27,31 +25,8 @@ const PropertyListContainer: React.FC<PropertyListContainerProps> = ({
   totalPages,
   onViewModeChange,
   onPageChange,
-  onPropertyClick,
-  loading,
-  error
+  onPropertyClick
 }) => {
-  if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading properties...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* View Mode Toggle */}

@@ -54,7 +54,7 @@ export interface User {
   phone: string;
   avatar?: string;
   verified: boolean;
-  membershipTier: 'free' | 'basic' | 'premium' | 'pro' | 'admin';
+  membershipTier: 'free' | 'basic' | 'premium' | 'pro';
   membershipExpiry?: string;
   chatCredits: number;
   joinedDate: string;

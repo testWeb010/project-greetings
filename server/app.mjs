@@ -1,3 +1,4 @@
+
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -8,11 +9,9 @@ import authRouter from "./routes/authRouter.mjs";
 import userRouter from "./routes/userRouter.mjs";
 import postAdRouter from "./routes/postAdRouter.mjs";
 import propertyRouter from "./routes/propertyRouter.mjs";
-import blogRouter from "./routes/blogRouter.mjs";
-import membershipRouter from "./routes/membershipRouter.mjs";
-import contactRouter from "./routes/contactRouter.mjs";
 import requireAuth from "./middlewares/requireAuth.mjs";
 import cashfree from "./routes/PaymentController.mjs";
+import membershipRouter from "./routes/membershipRouter.mjs";
 import AdminRouter from "./routes/AdminRouter.mjs";
 import couponRouter from "./routes/couponRouter.mjs";
 import ContactUsRouter from "./routes/ContactUsRouter.mjs";
@@ -108,9 +107,6 @@ app.get('/sitemap.xml', async (req, res) => {
 
 // API routes
 app.use("/api/auth", authRouter);
-app.use("/api/blog", blogRouter);
-app.use("/api/contact", contactRouter);
-app.use("/api/membership", membershipRouter);
 app.use("/api/contact", ContactUsRouter);
 app.use("/api/post/recommendations", requireAuth, recommendationRouter);
 app.use("/api/admin", requireAuth, AdminRouter);
@@ -119,6 +115,7 @@ app.use("/api/user", requireAuth, userRouter);
 app.use("/api/post", postAdRouter);
 app.use("/api/properties", propertyRouter);
 app.use("/api/payment", requireAuth, cashfree);
+app.use("/api/membership", membershipRouter);
 
 // Serve frontend build
 app.use(express.static(path.join(__dirname, "dist")));

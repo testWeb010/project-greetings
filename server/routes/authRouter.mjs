@@ -8,58 +8,11 @@ import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.mjs";
 import VToken from "../models/verificationToken.mjs";
 import { OAuth2Client } from "google-auth-library";
-import { validateUserRegistration } from "../middlewares/validation.mjs";
-import { authLimiter } from "../middlewares/rateLimiter.mjs";
-import requireAuth from "../middlewares/requireAuth.mjs";
 
 const router = express.Router();
 
-// Helper function to build standard response
-const buildResponse = (success, data = null, message = '', error = null) => ({
-  success,
-  data,
-  message,
-  error
-});
-
-// Helper function to generate JWT token
-const generateTokens = (user) => {
-  const token = jwt.sign(
-    { 
-      id: user._id, 
-      username: user.username, 
-      email: user.email,
-      membershipTier: user.membershipTier 
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
-  
-  const refreshToken = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: '30d' }
-  );
-  
-  return { token, refreshToken };
-};
-
-// Helper function to format user for response
-const formatUserResponse = (user) => ({
-  id: user._id,
-  name: user.name,
-  email: user.email,
-  phone: user.phone || '',
-  avatar: user.photo || user.avatar || '',
-  verified: user.isVerified || false,
-  membershipTier: user.membershipTier || 'free',
-  membershipExpiry: user.membershipExpiry,
-  chatCredits: user.chatCredits || 0,
-  joinedDate: user.createdAt || user.joinedDate
-});
-
 // Register API
-router.post("/register", authLimiter, validateUserRegistration, async (req, res) => {
+router.post("/register", async (req, res) => {
   // check valid email
   if (!isValidEmail(req.body.email)) {
     return res.status(400).json({ message: "Invalid email" });
@@ -163,98 +116,55 @@ router.post("/register", authLimiter, validateUserRegistration, async (req, res)
 
   return res
     .status(201)
-    .json(buildResponse(true, null, "Registration successful. Please check your email for verification."));
+    .json({ message: "Verification mail sent. Please verify." });
 });
 
 // login API
-router.post("/login", authLimiter, async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json(buildResponse(false, null, "Email and password are required"));
-    }
+router.post("/login", async (req, res) => {
+  //   check email or username
+  const email_username = req.body.emailOrUsername;
+  const email_or_username = checkEmailOrUsername(email_username);
+  let user = null;
 
+  try {
     const db = getDb().connection;
 
-    // Find user by email
-    const user = await db.collection("users").findOne({ 
-      email: email.toLowerCase(),
-      accountType: "local" 
-    });
-
-    if (!user) {
-      return res.status(401).json(buildResponse(false, null, "Invalid email or password"));
+    if (email_or_username === "email") {
+      user = await db
+        .collection("users")
+        .findOne({ email: email_username, accountType: "local" });
+    } else if (email_or_username === "username") {
+      user = await db.collection("users").findOne({
+        username: email_username,
+        accountType: "local",
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid email or username" });
     }
 
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
+    //   match password
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
-      return res.status(401).json(buildResponse(false, null, "Invalid email or password"));
+      return res.status(400).json({ message: "Invalid password" });
     }
 
-    // Check if email is verified
+    // check if email is verified
     if (!user.isVerified) {
-      return res.status(401).json(buildResponse(false, null, "Please verify your email before logging in"));
+      return res.status(400).json({ message: "Email not verified" });
     }
 
-    // Generate tokens
-    const { token, refreshToken } = generateTokens(user);
-    
-    // Format user response
-    const userResponse = formatUserResponse(user);
-
-    return res.json(buildResponse(true, { 
-      user: userResponse, 
-      token, 
-      refreshToken 
-    }, "Login successful"));
-    
+    // create jwt token
+    const token = jwt.sign(
+      { username: user.username, email: user.email },
+      process.env.JWT_SECRET
+    );
+    return res.json({ token: token });
   } catch (err) {
-    console.error("Login error:", err);
-    return res.status(500).json(buildResponse(false, null, "Internal server error", err.message));
-  }
-});
-
-// Logout API
-router.post("/logout", requireAuth, async (req, res) => {
-  try {
-    // In a real implementation, you might want to blacklist the token
-    // For now, we'll just return a success response
-    return res.json(buildResponse(true, null, "Logout successful"));
-  } catch (err) {
-    console.error("Logout error:", err);
-    return res.status(500).json(buildResponse(false, null, "Internal server error", err.message));
-  }
-});
-
-// Refresh token API
-router.post("/refresh", async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
-    
-    if (!refreshToken) {
-      return res.status(401).json(buildResponse(false, null, "Refresh token is required"));
-    }
-
-    // Verify refresh token
-    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    
-    const db = getDb().connection;
-    const user = await db.collection("users").findOne({ _id: decoded.id });
-    
-    if (!user) {
-      return res.status(401).json(buildResponse(false, null, "Invalid refresh token"));
-    }
-
-    // Generate new access token
-    const { token } = generateTokens(user);
-    
-    return res.json(buildResponse(true, { token }, "Token refreshed successfully"));
-    
-  } catch (err) {
-    console.error("Refresh token error:", err);
-    return res.status(401).json(buildResponse(false, null, "Invalid refresh token", err.message));
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -287,62 +197,10 @@ router.post("/verify-email", async (req, res) => {
       .collection("emailverificationtokens")
       .deleteOne({ _id: vtoken._id });
 
-    return res.json(buildResponse(true, null, "Email verified successfully"));
+    return res.json({ message: "Email verified" });
   } catch (err) {
-    console.error("Email verification error:", err);
-    return res.status(500).json(buildResponse(false, null, "Internal server error", err.message));
-  }
-});
-
-// Resend verification email
-router.post("/resend-verification", authLimiter, async (req, res) => {
-  try {
-    const { email } = req.body;
-    
-    if (!email) {
-      return res.status(400).json(buildResponse(false, null, "Email is required"));
-    }
-
-    const db = getDb().connection;
-    const user = await db.collection("users").findOne({ 
-      email: email.toLowerCase(),
-      accountType: "local" 
-    });
-
-    if (!user) {
-      return res.status(404).json(buildResponse(false, null, "User not found"));
-    }
-
-    if (user.isVerified) {
-      return res.status(400).json(buildResponse(false, null, "Email is already verified"));
-    }
-
-    // Remove existing token
-    await db.collection("emailverificationtokens").deleteOne({ user: user._id });
-
-    // Create new verification token
-    const verificationToken = new VToken({
-      user: user._id,
-      token: crypto.randomBytes(16).toString("hex"),
-    });
-
-    await verificationToken.save();
-
-    // Create verification link
-    const url = `${process.env.CLIENT_URL}/verify-email/${verificationToken.token}`;
-
-    // Send email
-    await sendEmail(
-      user.email,
-      "Email Verification",
-      `Click this link to verify your email: ${url}`
-    );
-
-    return res.json(buildResponse(true, null, "Verification email sent successfully"));
-    
-  } catch (err) {
-    console.error("Resend verification error:", err);
-    return res.status(500).json(buildResponse(false, null, "Internal server error", err.message));
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -470,30 +328,24 @@ const getUserData = async (access_token) => {
 };
 
 router.get("/google-request", async (req, res) => {
-  try {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Referrer-Policy", "no-referrer-when-downgrade");
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-    const client = new OAuth2Client(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI
-    );
+  const client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URI
+  );
 
-    const authorizeURI = client.generateAuthUrl({
-      access_type: "offline",
-      scope: ["email", "profile"],
-      prompt: "consent",
-    });
+  const authorizeURI = client.generateAuthUrl({
+    access_type: "offline",
+    scope: ["email", "profile"],
+    prompt: "consent",
+  });
 
-    return res.json(buildResponse(true, { url: authorizeURI }));
-  } catch (err) {
-    console.error("Google auth request error:", err);
-    return res.status(500).json(buildResponse(false, null, "Failed to generate Google auth URL", err.message));
-  }
+  return res.json({ url: authorizeURI });
 });
 
-// Google auth callback (for URL redirect)
 router.get("/google", async (req, res) => {
   const access_code = req.query.code;
   try {
@@ -503,96 +355,44 @@ router.get("/google", async (req, res) => {
     const userData = await getUserData(googleUser.access_token);
 
     const db = getDb().connection;
-    let user = await db.collection("users").findOne({ 
-      email: userData.email, 
-      accountType: "google" 
-    });
 
-    let tokens = null;
+    // check if user already exists
+    const user = await db
+      .collection("users")
+      .findOne({ email: userData.email, accountType: "google" });
+
+    let token = null;
     if (user) {
-      tokens = generateTokens(user);
+      token = jwt.sign(
+        { username: user.username, email: user.email },
+        process.env.JWT_SECRET
+      );
     } else {
-      // Create new user
+      // if user doesn't exist, create new user
       const newUser = new User({
         name: userData.name,
         email: userData.email,
         photo: userData.picture,
-        username: userData.email.split("@")[0].substr(0, 8) + Math.floor(Math.random() * 1000),
+        username:
+          userData.email.split("@")[0].substr(0, 8) +
+          Math.floor(Math.random() * 1000),
         accountType: "google",
         isVerified: true,
-        membershipTier: "free",
-        chatCredits: 5
       });
+      // see new user
 
-      user = await newUser.save();
-      tokens = generateTokens(user);
+      const savedUser = await newUser.save();
+      token = jwt.sign(
+        { username: savedUser.username, email: savedUser.email },
+        process.env.JWT_SECRET
+      );
     }
-    
     return res.redirect(
-      `${process.env.CLIENT_URL}/google-auth-success?token=${tokens.token}&refreshToken=${tokens.refreshToken}`
+      `${process.env.CLIENT_URL}/google-auth-success?token=${token}`
     );
   } catch (err) {
-    console.error("Google auth error:", err);
-    return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
-  }
-});
-
-// Google auth for API (for frontend service)
-router.post("/google", async (req, res) => {
-  try {
-    const { code } = req.body;
-    
-    if (!code) {
-      return res.status(400).json(buildResponse(false, null, "Authorization code is required"));
-    }
-
-    const response = await oAuth2Client.getToken(code);
-    await oAuth2Client.setCredentials(response.tokens);
-    const googleUser = oAuth2Client.credentials;
-    const userData = await getUserData(googleUser.access_token);
-
-    const db = getDb().connection;
-    let user = await db.collection("users").findOne({ 
-      email: userData.email, 
-      accountType: "google" 
-    });
-
-    if (user) {
-      // Existing user
-      const { token, refreshToken } = generateTokens(user);
-      const userResponse = formatUserResponse(user);
-      
-      return res.json(buildResponse(true, { 
-        user: userResponse, 
-        token, 
-        refreshToken 
-      }, "Login successful"));
-    } else {
-      // Create new user
-      const newUser = new User({
-        name: userData.name,
-        email: userData.email,
-        photo: userData.picture,
-        username: userData.email.split("@")[0].substr(0, 8) + Math.floor(Math.random() * 1000),
-        accountType: "google",
-        isVerified: true,
-        membershipTier: "free",
-        chatCredits: 5
-      });
-
-      user = await newUser.save();
-      const { token, refreshToken } = generateTokens(user);
-      const userResponse = formatUserResponse(user);
-      
-      return res.json(buildResponse(true, { 
-        user: userResponse, 
-        token, 
-        refreshToken 
-      }, "Registration successful"));
-    }
-  } catch (err) {
-    console.error("Google auth API error:", err);
-    return res.status(500).json(buildResponse(false, null, "Google authentication failed", err.message));
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

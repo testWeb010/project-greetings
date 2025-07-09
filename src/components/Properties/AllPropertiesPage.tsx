@@ -1,10 +1,7 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, Filter, Grid, List } from 'lucide-react';
-import { useProperties, usePropertyFilters } from '../../hooks/useProperties';
 import PropertyFilterSidebar from './PropertyFilterSidebar';
 import PropertyListContainer from './PropertyListContainer';
-import LoadingSpinner from '../LoadingSpinner';
 
 interface LocalSearchFilters {
   propertyType: string;
@@ -37,45 +34,11 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
     availableFrom: ''
   });
 
-  // API hooks
-  const propertiesHook = useProperties({
-    page: 1,
-    limit: 12,
-  });
-
-  const propertyFilters = usePropertyFilters();
-  
   // Filter options
   const propertyTypes = ['Apartment', 'Single Room', 'PG', 'House', 'Villa'];
   const genderOptions = ['Male', 'Female', 'Family', 'No Preference'];
   const bedroomOptions = ['1', '2', '3', '4', '5+'];
   const amenityOptions = ['Verified', 'Smoking & Drinking', 'Independent', 'Electricity', 'AC', 'WiFi', 'Parking'];
-
-  // Load initial properties
-  useEffect(() => {
-    propertiesHook.loadPage(1);
-  }, []);
-
-  // Handle search query change
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      const searchFilters = {
-        location: searchQuery,
-        priceRange: filters.priceRange,
-        propertyType: filters.propertyType,
-        genderPreference: filters.genderPreference,
-        amenities: filters.amenities,
-        availableFrom: filters.availableFrom,
-        bedrooms: filters.bedrooms,
-        city: searchQuery,
-        minPrice: filters.priceRange.min,
-        maxPrice: filters.priceRange.max,
-      };
-      propertyFilters.debouncedSearch(searchFilters);
-    } else {
-      propertiesHook.loadPage(1);
-    }
-  }, [searchQuery, filters]);
 
   const handleFilterChange = (key: keyof LocalSearchFilters, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -148,7 +111,7 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
               </div>
 
               <span className="text-sm text-gray-600">
-                {propertiesHook.data?.length || propertyFilters.results?.data?.length || 0} Properties Found
+                Properties Found
               </span>
             </div>
           </div>
@@ -171,28 +134,17 @@ const AllPropertiesPage: React.FC<AllPropertiesPageProps> = ({ onPropertyClick }
           />
 
           {/* Properties Grid/List Container */}
-          {(propertiesHook.loading || propertyFilters.loading) ? (
-            <div className="flex-1 flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            <PropertyListContainer
-              properties={searchQuery.trim() ? 
-                (propertyFilters.results?.data || []) : 
-                (propertiesHook.data || [])
-              }
-              viewMode={viewMode}
-              currentPage={propertiesHook.pagination.page}
-              totalPages={propertiesHook.pagination.totalPages}
-              onViewModeChange={setViewMode}
-              onPageChange={(page: number) => propertiesHook.goToPage(page)}
-              onPropertyClick={onPropertyClick}
-              searchQuery={searchQuery}
-              filters={filters}
-              loading={propertiesHook.loading || propertyFilters.loading}
-              error={propertiesHook.error || propertyFilters.error}
-            />
-          )}
+          <PropertyListContainer
+            properties={[]}
+            viewMode={viewMode}
+            currentPage={1}
+            totalPages={1}
+            onViewModeChange={setViewMode}
+            onPageChange={() => {}}
+            onPropertyClick={onPropertyClick}
+            searchQuery={searchQuery}
+            filters={filters}
+          />
         </div>
       </div>
     </div>
