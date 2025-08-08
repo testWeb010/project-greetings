@@ -1,6 +1,6 @@
 
 import React from 'react';
-import AchievementStats from '../components/CallToAction/AchievementStats';
+import AchievementStats from '../components/features/CallToAction/components/AchievementStats';
 
 const CallToAction: React.FC = () => {
   return (

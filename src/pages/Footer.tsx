@@ -1,11 +1,11 @@
 import React from 'react';
-import NewsletterSubscription from '../components/Footer/NewsletterSubscription';
-import CompanyInfo from '../components/Footer/CompanyInfo';
-import FooterNavigation from '../components/Footer/FooterNavigation';
+import NewsletterSubscription from '../components/features/Footer/containers/NewsletterSubscription';
+import CompanyInfo from '../components/features/Footer/components/CompanyInfo';
+import FooterNavigation from '../components/features/Footer/components/FooterNavigation';
 
-import Achievements from '../components/Footer/Achievements';
-import TrustBadges from '../components/Footer/TrustBadges';
-import BottomBar from '../components/Footer/BottomBar';
+import Achievements from '../components/features/Footer/components/Achievements';
+import TrustBadges from '../components/features/Footer/components/TrustBadges';
+import BottomBar from '../components/features/Footer/components/BottomBar';
 
 const Footer: React.FC = () => {
   return (

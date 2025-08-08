@@ -1,6 +1,6 @@
 
 import React from 'react';
-import AuthContainer from '../components/Auth/AuthContainer';
+import AuthContainer from '../components/features/Auth/containers/AuthContainer';
 
 interface AuthModalProps {
   isOpen: boolean;

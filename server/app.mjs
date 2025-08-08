@@ -1,4 +1,3 @@
-
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -43,7 +42,12 @@ const io = new Server(httpServer, {
 // Increase upload limits to avoid 413 error
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use(cors({ origin: clientURL, credentials: true }));
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
+}));
 app.use(cookieParser());
 
 app.use((req, res, next) => {

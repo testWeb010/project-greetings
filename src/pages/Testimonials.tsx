@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import TrustIndicators from '../components/Testimonials/TrustIndicators';
-import TestimonialHeader from '../components/Testimonials/TestimonialHeader';
-import TestimonialFilters from '../components/Testimonials/TestimonialFilters';
-import TestimonialCarousel from '../components/Testimonials/TestimonialCarousel';
-import VideoTestimonials from '../components/Testimonials/VideoTestimonials';
-import AchievementStats from '../components/Testimonials/AchievementStats';
-import SuccessMetrics from '../components/Testimonials/SuccessMetrics';
-import TestimonialsCTA from '../components/Testimonials/TestimonialsCTA';
+import TrustIndicators from '../components/features/Testimonials/components/TrustIndicators';
+import TestimonialHeader from '../components/features/Testimonials/components/TestimonialHeader';
+import TestimonialFilters from '../components/features/Testimonials/containers/TestimonialFilters';
+import TestimonialCarousel from '../components/features/Testimonials/components/TestimonialCarousel';
+import VideoTestimonials from '../components/features/Testimonials/components/VideoTestimonials';
+import AchievementStats from '../components/features/Testimonials/components/AchievementStats';
+import SuccessMetrics from '../components/features/Testimonials/components/SuccessMetrics';
+import TestimonialsCTA from '../components/features/Testimonials/components/TestimonialsCTA';
 import { Home, Users, Award, TrendingUp } from 'lucide-react';
 
 interface TestimonialUser {

@@ -2,6 +2,7 @@ import express from "express";
 import { getDb } from "../db/conn.mjs";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import { checkCSRFToken } from '../utils/security.mjs';
 const router = express.Router();
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -65,7 +66,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/change-password", async (req, res) => {
+router.post("/change-password", checkCSRFToken, async (req, res) => {
   try {
     const db = getDb().connection;
 
@@ -113,8 +114,7 @@ router.post("/change-password", async (req, res) => {
   }
 });
 
-
-router.post("/check-username", async (req, res) => {
+router.post("/check-username", checkCSRFToken, async (req, res) => {
   try {
     const db = getDb().connection;
 

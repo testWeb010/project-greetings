@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 // Import lucide-react icons if needed by individual components
 // import { ArrowRight } from 'lucide-react';
 
@@ -6,14 +7,15 @@ import React, { useState, useEffect } from 'react';
 import { Membership } from '../types';
 
 // Import the new components
-import MembershipHero from '../components/Membership/MembershipHero';
-import MembershipCardsList from '../components/Membership/MembershipCardsList';
-import FeaturesComparisonTable from '../components/Membership/FeaturesComparisonTable';
-import BenefitsSection from '../components/Membership/BenefitsSection';
-import FAQSection from '../components/Membership/FAQSection';
-import MembershipCTA from '../components/Membership/MembershipCTA';
+import MembershipHero from '../components/features/Membership/components/MembershipHero';
+import MembershipCardsList from '../components/features/Membership/components/MembershipCardsList';
+import FeaturesComparisonTable from '../components/features/Membership/components/FeaturesComparisonTable';
+import BenefitsSection from '../components/features/Membership/components/BenefitsSection';
+import FAQSection from '../components/features/Membership/components/FAQSection';
+import MembershipCTA from '../components/features/Membership/components/MembershipCTA';
 
 const MembershipPage: React.FC = () => {
+  const navigate = useNavigate(); // Initialize navigate
   // selectedPlan state is kept to highlight the selected card, even if not used for filtering here
   const [selectedPlan, setSelectedPlan] = useState<string>('basic');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -140,6 +142,9 @@ const MembershipPage: React.FC = () => {
     // Example: call a function to initiate payment with planId
     // After successful upgrade, you might want to update the selected plan
     // setSelectedPlan(planId);
+    
+    // Navigate to checkout page and pass the selected planId as a query parameter
+    navigate(`/checkout?plan=${planId}`);
   };
 
   // Remove helper functions that are now in MembershipCard or no longer needed here
